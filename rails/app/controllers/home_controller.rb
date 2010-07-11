@@ -1,29 +1,37 @@
 require 'open-uri'
 require 'rubygems'
 require 'hpricot'
+require 'json'
+
 class HomeController < ApplicationController
+  include HomeHelper
+
   def index
     
   end
-  
-  def get_ba_by_id
-    url = "http://beeradvocate.com/beer/profile/" + params[:brewery] + "/" + params[:id]
-    page_content = open(url).read
-    page = Hpricot(page_content)
-    @beer_name = page.at("h1").inner_html
-    @rating = page.at("//td[@style='background:#FFFFFF;']/span[@class='BAscore_big']").inner_html
-    @style = page.at("//a[@href^='/beer/style/']/b").inner_html
-    @abv_element = page.at("//a[@href='/articles/518']").previous.inner_text
-    @abv = @abv_element[5..-3]
-    respond_to do |format|
-      format.html {
-        render :json => {
-          :beer_name => @beer_name,
-          :rating => @rating,
-          :style => @style,
-          :abv => @abv
-        }
-      }
+
+  def find_ba_id_google
+    nr_results = 1
+    if params[:nr]
+      nr_results = params[:nr]
     end
+    results = fetch_ba_id_google(params[:query],nr_results)
+    render :json => results
+  end
+
+
+
+  def get_ba_by_name
+    ba_id = fetch_ba_id_google(params[:query],1)[0]
+    if not ba_id
+      render :json => { :result => "No beers found" }
+    else
+      bainfo = fetch_ba_info(ba_id[:brewery],ba_id[:beer])
+      render :json => bainfo
+    end
+  end
+
+  def get_ba_by_id
+    render :json => fetch_ba_info(params[:brewery],params[:id])
   end
 end
