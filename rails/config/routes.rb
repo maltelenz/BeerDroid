@@ -36,6 +36,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'find_ba_id_google/:query/:nr', :controller => 'home', :action => 'find_ba_id_google'
   map.connect 'get_ba_by_name/:query', :controller => 'home', :action => 'get_ba_by_name'
   map.connect 'get_ba_by_id/:brewery/:id.:format', :controller => 'home', :action => 'get_ba_by_id'
+  map.connect 'get_systemet_by_name/:query', :controller => 'home', :action => 'get_systemet_by_name'
+  map.connect 'supersearch/:query', :controller => 'home', :action => 'super_search'
   # See how all your routes lay out with "rake routes"
 
   # Install the default routes as the lowest priority.
