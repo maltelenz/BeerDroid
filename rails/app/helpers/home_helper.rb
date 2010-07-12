@@ -6,19 +6,23 @@ module HomeHelper
   #  ...]
   #
   def fetch_ba_id_google(query,nr_results = 1)
-    url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=site:http://beeradvocate.com/beer/profile/%20" + URI.escape(query)
+    url = "http://ajax.googleapis.com/ajax/services/search/web" + \
+    "?v=1.0&q=site:http://beeradvocate.com/beer/profile/%20" + URI.escape(query)
     page_content = open(url).read
     result_hash = JSON.parse(page_content)
+    #collect an array of the ids
     results = (0..Integer(nr_results)-1).collect{
       |i|
       begin
+        #split the url up to get the id at the end (after 'profile')
         spliturl = result_hash["responseData"]["results"][i]["url"].split("/")
         start = spliturl.index("profile") + 1
         brewery = spliturl[start]
         beer = spliturl[start+1]
         {:brewery => brewery ,:beer => beer}
       rescue NoMethodError
-        
+        #failed to get an id
+        nil
       end
     }
     #If you just JSON this later, it seems to become randomized order
@@ -39,20 +43,22 @@ module HomeHelper
     page_content = open(url).read
     page = Hpricot(page_content)
     begin
-      @beer_name = page.at("h1").inner_html
-      @rating = page.at("//td[@style='background:#FFFFFF;']/span[@class='BAscore_big']").inner_html
-      @style = page.at("//a[@href^='/beer/style/']/b").inner_html
-      @abv_element = page.at("//a[@href='/articles/518']").previous.inner_text
-      @abv = @abv_element[5..-3]
+      #sort out the values we want
+      beer_name = page.at("h1").inner_html
+      rating = page.at("//td[@style='background:#FFFFFF;']/span[@class='BAscore_big']").inner_html
+      style = page.at("//a[@href^='/beer/style/']/b").inner_html
+      abv_element = page.at("//a[@href='/articles/518']").previous.inner_text
+      #sort of an ugly hack. this interval is the percentage.
+      abv = abv_element[5..-3]
     rescue NoMethodError
       #no hit
       return nil
     end
     return {
-      :beer_name => @beer_name,
-      :rating => @rating,
-      :style => @style,
-      :abv => @abv
+      :beer_name => beer_name,
+      :rating => rating,
+      :style => style,
+      :abv => abv
     }
   end
 
@@ -69,22 +75,28 @@ module HomeHelper
   def fetch_systemet_info_by_name(query,nr_results=1)
     url = "http://agent.nocrew.org/xml/ws/search/?query=" + CGI::escape(query)
     page_content = open(url).read
+
     page = Hpricot(page_content)
     
+    #collect an array of nicely formatted results
     results = (0..Integer(nr_results)-1).collect{
       |i|
+      #get the product
       product = page.at("//product[@count='" + i.to_s + "']")
       if product
+        #sort out all the wanted values
         beer_name = product.at("/name").inner_html
         systemet_id = product.at("/id[@key='systembolaget']").inner_html
         price = product.at("/price[@currency='SEK'").inner_html
         size = product.at("/size[@measure='ml']").inner_html
+        #protect for the possibility there is no link to beeradvocate
         begin
           ba_url = product.at("/urls/url[@source='BeerAdvocate']").inner_html
         rescue NoMethodError
           #no ba link
         end
         if ba_url
+          #sort out the beeradvocate id from the link
           begin
             spliturl = ba_url.split("/")
             start = spliturl.index("profile") + 1
@@ -95,6 +107,7 @@ module HomeHelper
             ba_id = nil
           end
         end
+        #add the completed object to the array
         {
           :beer_name => beer_name,
           :systemet_id => systemet_id,
@@ -103,20 +116,42 @@ module HomeHelper
           :ba_id => ba_id
         }
       else
+        #no more hits
         nil
       end
     }
+    #return the array, unique and non-nil entries only
     return results.uniq.compact
   end
   
+
+  #takes a string query and fetches combined info from
+  # beeradvocate.com and systembolaget (via agent.nocrew.org)
+  #return is in format:
+  #  [{:beer_name => @beer_name,
+  #    :rating => @rating,
+  #    :style => @style,
+  #    :abv => @abv,
+  #    :ba_id => {:brewery => brewery_id ,:beer => beer_id},
+  #    :systemet_id => systembolaget_id,
+  #    :systemet_price => systembolaget_price, #in SEK
+  #    :systemet_size => systembolaget_unit_size #in ml
+  #  },
+  #  ...]
+  # 
   def fetch_all_possible_info(query)
+    #get up to 20 systemet entries
     systemet_infos = fetch_systemet_info_by_name(query,20)
+    #and up to 10 beeradvocate.com ids from google
     ba_ids = fetch_ba_id_google(params[:query],10)
+    #join the two result sets
     final_result = ba_ids.collect{
       |ba_id_iter|
       if ba_id_iter
+        #get info from beeradvocate.com
         beer_info = fetch_ba_info(ba_id_iter[:brewery],ba_id_iter[:beer])
         if !beer_info
+          #wrong beeradvocate.com id
           next
         end
         beer_info[:ba_id] = ba_id_iter
@@ -135,6 +170,7 @@ module HomeHelper
         nil #we are past the real hits
       end
     }
+    #return only unique hits and remove nils
     return final_result.uniq.compact
   end
   

@@ -1,0 +1,6 @@
+BeerDroid
+=========
+
+This is an ongoing project with the goal to create an android application for accessing information about beer, from multiple sources, through a simple and practical interface, while "on the go".
+
+On the server side a rails server is used to gather and format data in a practical JSON format for the android application.

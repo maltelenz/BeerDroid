@@ -7,7 +7,7 @@ class HomeController < ApplicationController
   include HomeHelper
 
   def index
-    
+    #shows a placeholder empty page
   end
 
   #return json of ba id of query
@@ -57,8 +57,6 @@ class HomeController < ApplicationController
     render :json => fetch_ba_info(params[:brewery],params[:id])
   end
 
-
-
   #returns beer info from systemet given a query
   #return is in format:
   #  {
@@ -73,6 +71,20 @@ class HomeController < ApplicationController
     render :json => fetch_systemet_info_by_name(params[:query])
   end
 
+  #takes a string query and fetches combined info from
+  # beeradvocate.com and systembolaget (via agent.nocrew.org)
+  #json return is in format:
+  #  [{:beer_name => @beer_name,
+  #    :rating => @rating,
+  #    :style => @style,
+  #    :abv => @abv,
+  #    :ba_id => {:brewery => brewery_id ,:beer => beer_id},
+  #    :systemet_id => systembolaget_id,
+  #    :systemet_price => systembolaget_price, #in SEK
+  #    :systemet_size => systembolaget_unit_size #in ml
+  #  },
+  #  ...]
+  # 
   def super_search
     render :json => fetch_all_possible_info(params[:query])
   end
