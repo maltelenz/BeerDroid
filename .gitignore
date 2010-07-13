@@ -1,4 +1,5 @@
 *#
 .#*
 rails/log/
-
+android/bin/
+android/gen/
