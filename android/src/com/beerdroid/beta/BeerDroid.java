@@ -16,6 +16,7 @@ import org.json.JSONException;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class BeerDroid extends ListActivity {
 
 	public String TAG = "BeerDroid"; //Application name for logging
 
-	private AlertDialog busy;
+	private ProgressDialog busy;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -45,9 +46,11 @@ public class BeerDroid extends ListActivity {
 
 		search_field = (EditText) findViewById(R.id.search_field);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Contacting Server...");
-		busy = builder.create();
+		busy = new ProgressDialog(this);
+		busy.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		busy.setMessage("Contacting server...");
+		busy.setCancelable(false);
+		
 		
 		Button search_button = (Button) findViewById(R.id.search_button);
 		search_button.setOnClickListener(new OnClickListener() {
