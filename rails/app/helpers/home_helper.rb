@@ -47,6 +47,7 @@ module HomeHelper
       beer_name = page.at("h1").inner_html
       rating = page.at("//td[@style='background:#FFFFFF;']/span[@class='BAscore_big']").inner_html
       style = page.at("//a[@href^='/beer/style/']/b").inner_html
+      brewery_name = page.at("//a[@href^='/beer/profile/']/b").inner_html
       abv_element = page.at("//a[@href='/articles/518']").previous.inner_text
       #sort of an ugly hack. this interval is the percentage.
       abv = abv_element[5..-3]
@@ -58,7 +59,8 @@ module HomeHelper
       :beer_name => beer_name,
       :rating => rating,
       :style => style,
-      :abv => abv
+      :abv => abv,
+      :brewery_name => brewery_name
     }
   end
 

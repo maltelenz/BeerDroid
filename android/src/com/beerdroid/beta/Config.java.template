@@ -1,0 +1,17 @@
+package com.beerdroid.beta;
+
+public final class Config {
+	
+	/*****
+	 * Change these variables
+	 */
+	//Where can your rails install be found on the internet?
+	public static String base_url = "http://localhost:3000/";
+	
+	
+	
+	/*****
+	 * Anything below here should NOT need to be changed
+	 */
+	public static String super_search_url = "supersearch";
+}
