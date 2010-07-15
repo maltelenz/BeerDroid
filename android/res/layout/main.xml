@@ -8,6 +8,7 @@
     	android:orientation="horizontal"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
+    	android:background="#CCCCCC"
     	>
     
 		<EditText android:id="@+id/search_field"
@@ -25,8 +26,16 @@
 			android:layout_marginLeft="10dp"
 			android:text="Search" />
 	</LinearLayout>
+    <TextView
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+	    android:padding="4px"
+		android:textColor="#000000"
+		android:text="Results (click for details):"
+    	android:background="@drawable/my_border"
+    	/>
 	<ListView
-    android:id="@+id/android:list"
+    android:id="@+id/result_list"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#CCCCCC"

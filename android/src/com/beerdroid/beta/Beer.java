@@ -7,16 +7,16 @@ import android.util.Log;
 
 public class Beer {
 
-	public String name = null;
-	public String style = null;
-	public String ba_rating = null;
+	public String name;
+	public String style;
+	public String ba_rating;
 	public String brewery_name;
-	public Integer systemet_size = null;
-	public Integer systemet_price = null;
-	public Integer ba_brewery = null;
-	public Integer ba_beer = null;
-	
-	
+	public Integer systemet_size;
+	public Integer systemet_price;
+	public Integer ba_brewery;
+	public Integer ba_beer;
+
+
 	private String KEY_NAME = "beer_name";
 	private String KEY_STYLE = "style";
 	private String KEY_BA_RATING = "rating";
@@ -26,7 +26,7 @@ public class Beer {
 	private String KEY_BA_BREWERY = "brewery";
 	private String KEY_BA_BEER = "beer";
 	private String KEY_BREWERY_NAME = "brewery_name";
-	
+
 	public Beer(JSONObject json) {
 		try {
 			name = json.getString(KEY_NAME);
@@ -75,8 +75,8 @@ public class Beer {
 		} catch (JSONException e) {
 			Log.d("Beer", "No ba_id found: " + e.toString());
 		}
-		
-	
+
+
 	}
 
 }

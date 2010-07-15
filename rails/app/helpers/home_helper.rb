@@ -1,3 +1,4 @@
+require 'iconv'
 module HomeHelper
   
   #fetches 'nr_results' beeradvocate.com id's from google
@@ -8,7 +9,9 @@ module HomeHelper
   def fetch_ba_id_google(query,nr_results = 1)
     url = "http://ajax.googleapis.com/ajax/services/search/web" + \
     "?v=1.0&q=site:http://beeradvocate.com/beer/profile/%20" + URI.escape(query)
-    page_content = open(url).read
+    page_stream = open(url)
+    page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
+
     result_hash = JSON.parse(page_content)
     #collect an array of the ids
     results = (0..Integer(nr_results)-1).collect{
@@ -40,7 +43,9 @@ module HomeHelper
   #
   def fetch_ba_info(brewery,beer)
     url = "http://beeradvocate.com/beer/profile/" +  CGI::escape(brewery.to_s) + "/" +  CGI::escape(beer.to_s)
-    page_content = open(url).read
+    page_stream = open(url)
+    page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
+
     page = Hpricot(page_content)
     begin
       #sort out the values we want
@@ -76,7 +81,8 @@ module HomeHelper
   #
   def fetch_systemet_info_by_name(query,nr_results=1)
     url = "http://agent.nocrew.org/xml/ws/search/?query=" + CGI::escape(query)
-    page_content = open(url).read
+    page_stream = open(url)
+    page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
 
     page = Hpricot(page_content)
     

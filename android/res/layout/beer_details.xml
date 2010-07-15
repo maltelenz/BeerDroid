@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/beer_details"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#CCCCCC"
+    android:stretchColumns="0">
+
+    <TableRow>
+        <TextView
+        	style="@style/Header"
+            android:text="Name"
+            />
+    </TableRow>
+    
+	<TableRow>
+	        <TextView
+        	android:id="@+id/beer_details_name"
+        	style="@style/Data"
+            />
+	</TableRow>
+    
+    <TableRow>
+        <TextView
+            android:text="Brewery"
+        	style="@style/Header"
+			 />
+    </TableRow>
+    
+	<TableRow>
+        <TextView
+        	android:id="@+id/beer_details_brewery"
+        	style="@style/Data"
+            />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Style"
+        	style="@style/Header"
+			 />
+    </TableRow>
+    
+	<TableRow>
+        <TextView
+        	android:id="@+id/beer_details_style"
+        	style="@style/Data"
+            />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="BA Rating"
+        	style="@style/Header"
+			 />
+    </TableRow>
+    
+	<TableRow>
+        <TextView
+        	android:id="@+id/beer_details_ba_rating"
+        	style="@style/Data"
+            />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Size at Systembolaget (ml)"
+        	style="@style/Header"
+			 />
+    </TableRow>
+    
+	<TableRow>
+        <TextView
+        	android:id="@+id/beer_details_systemet_size"
+        	style="@style/Data"
+            />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Price at Systembolaget (SEK)"
+        	style="@style/Header"
+			 />
+    </TableRow>
+    
+	<TableRow>
+        <TextView
+        	android:id="@+id/beer_details_systemet_price"
+        	style="@style/Data"
+            />
+    </TableRow>
+</TableLayout>
