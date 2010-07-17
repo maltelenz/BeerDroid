@@ -178,7 +178,7 @@ public class BeerDroid extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			Log.d(TAG, "Showing beer in position: " + position);
+			//Log.d(TAG, "Showing beer in position: " + position);
 			View v = convertView;
 			if (v == null) {
 				final LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);

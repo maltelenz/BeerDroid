@@ -21,14 +21,14 @@ public class Beer {
 
 	private static final String TAG = "Beer";
 
-	private String name;
-	private String style;
-	private String baRating;
-	private String breweryName;
-	private Integer systemetSize;
-	private Integer systemetPrice;
-	private Integer baBrewery;
-	private Integer baBeer;
+	public String name;
+	public String style;
+	public String baRating;
+	public String breweryName;
+	public Integer systemetSize;
+	public Integer systemetPrice;
+	public Integer baBrewery;
+	public Integer baBeer;
 
 
 	public Beer(JSONObject json) {

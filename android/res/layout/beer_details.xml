@@ -89,4 +89,11 @@
         	style="@style/Data"
             />
     </TableRow>
+    <TableRow>
+        <Button android:id="@+id/ba_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="5dp"
+			android:text="Show on beeradvocate" />
+    </TableRow>
 </TableLayout>
