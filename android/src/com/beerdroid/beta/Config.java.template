@@ -13,7 +13,7 @@ public final class Config {
 	/*****
 	 * Anything below here should NOT need to be changed
 	 */
-	public static String superSearchUrl = "supersearch";
+	public static String superSearchUrl = "supersearch/";
 	
 	public static String beerAdvocateBaseUrl = "http://beeradvocate.com";
 	public static String beerAdvocateBeerUrl = "/beer/profile/";
