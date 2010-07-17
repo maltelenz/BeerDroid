@@ -151,9 +151,10 @@ public class BeerDroid extends Activity {
 		try {
 			final JSONArray jsonResults = new JSONArray(searchResults);
 			
+			Log.d(TAG, "Number of beers found: " + jsonResults.length());
 			//check if we have any hits
 			if (jsonResults.length() == 0) {
-				Toast.makeText(this, "No beers found", Toast.LENGTH_LONG);
+				Toast.makeText(getBaseContext(), "No beers found", Toast.LENGTH_LONG).show();
 			}
 			
 			for (int i = 0; i < jsonResults.length(); i = i + 1) {
@@ -162,7 +163,9 @@ public class BeerDroid extends Activity {
 		} catch (JSONException e) {
 			Log.e(TAG, "Could not decode results: " + e.toString());
 		}
-		Log.d(TAG, resultList.toString());
+		
+		Log.d(TAG, "Final list of search results: " + resultList.toString());
+		
 		final ResultAdapter resultAdapter = new ResultAdapter(this, R.layout.result_list_item, resultList);
 		resultView.setAdapter(resultAdapter);
 	}
