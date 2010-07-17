@@ -9,23 +9,23 @@ public class Beer {
 
 	public String name;
 	public String style;
-	public String ba_rating;
-	public String brewery_name;
-	public Integer systemet_size;
-	public Integer systemet_price;
-	public Integer ba_brewery;
-	public Integer ba_beer;
+	public String baRating;
+	public String breweryName;
+	public Integer systemetSize;
+	public Integer systemetPrice;
+	public Integer baBrewery;
+	public Integer baBeer;
 
 
-	private String KEY_NAME = "beer_name";
-	private String KEY_STYLE = "style";
-	private String KEY_BA_RATING = "rating";
-	private String KEY_SYSTEMET_PRICE = "systemet_price";
-	private String KEY_SYSTEMET_SIZE = "systemet_size";
-	private String KEY_BA_ID = "ba_id";
-	private String KEY_BA_BREWERY = "brewery";
-	private String KEY_BA_BEER = "beer";
-	private String KEY_BREWERY_NAME = "brewery_name";
+	private static final String KEY_NAME = "beer_name";
+	private static final String KEY_STYLE = "style";
+	private static final String KEY_BA_RATING = "rating";
+	private static final String KEY_SYSTEMET_PRICE = "systemet_price";
+	private static final String KEY_SYSTEMET_SIZE = "systemet_size";
+	private static final String KEY_BA_ID = "ba_id";
+	private static final String KEY_BA_BREWERY = "brewery";
+	private static final String KEY_BA_BEER = "beer";
+	private static final String KEY_BREWERY_NAME = "brewery_name";
 
 	public Beer(JSONObject json) {
 		try {
@@ -40,35 +40,35 @@ public class Beer {
 			Log.e("Beer", "Could not create beer: " + e.toString());
 		}
 		try {
-			ba_rating = json.getString(KEY_BA_RATING);
+			baRating = json.getString(KEY_BA_RATING);
 		} catch (JSONException e) {
 			Log.d("Beer", "No BA rating found: " + e.toString());
 		}
 		try {
-			systemet_price = json.getInt(KEY_SYSTEMET_PRICE);
+			systemetPrice = json.getInt(KEY_SYSTEMET_PRICE);
 		} catch (JSONException e) {
 			Log.d("Beer", "No systemet_price found: " + e.toString());
 		}
 		try {
-			systemet_size = json.getInt(KEY_SYSTEMET_SIZE);
+			systemetSize = json.getInt(KEY_SYSTEMET_SIZE);
 		} catch (JSONException e) {
 			Log.d("Beer", "No systemet_size found: " + e.toString());
 		}
 		try {
-			brewery_name = json.getString(KEY_BREWERY_NAME);
+			breweryName = json.getString(KEY_BREWERY_NAME);
 		} catch (JSONException e) {
 			Log.d("Beer", "No brewery_name found: " + e.toString());
 		}
-		JSONObject ba_id;
+		JSONObject baId;
 		try {
-			ba_id = json.getJSONObject(KEY_BA_ID);
+			baId = json.getJSONObject(KEY_BA_ID);
 			try {
-				ba_brewery = ba_id.getInt(KEY_BA_BREWERY);
+				baBrewery = baId.getInt(KEY_BA_BREWERY);
 			} catch (JSONException e) {
 				Log.d("Beer", "No ba_brewery found: " + e.toString());
 			}
 			try {
-				ba_beer = ba_id.getInt(KEY_BA_BEER);
+				baBeer = baId.getInt(KEY_BA_BEER);
 			} catch (JSONException e) {
 				Log.d("Beer", "No ba_beer found: " + e.toString());
 			}

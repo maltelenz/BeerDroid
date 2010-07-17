@@ -35,9 +35,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class BeerDroid extends Activity {
 
-	private EditText search_field;
+	private EditText searchField;
 
-	public String TAG = "BeerDroid"; //Application name for logging
+	public static final String TAG = "BeerDroid"; //Application name for logging
 
 	private ProgressDialog busy;
 
@@ -54,7 +54,7 @@ public class BeerDroid extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		search_field = (EditText) findViewById(R.id.search_field);
+		searchField = (EditText) findViewById(R.id.search_field);
 
 		//prepare a progress dialog
 		busy = new ProgressDialog(this);
@@ -63,13 +63,13 @@ public class BeerDroid extends Activity {
 		busy.setCancelable(false);
 		
 		//make search button clickable
-		final Button search_button = (Button) findViewById(R.id.search_button);
-		search_button.setOnClickListener(new OnClickListener() {
+		final Button searchButton = (Button) findViewById(R.id.search_button);
+		searchButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				//fetch the entered search query
-				final String query = search_field.getText().toString();
+				final String query = searchField.getText().toString();
 				new DoSearch().execute(query);
 				busy.show();
 			}
@@ -110,12 +110,12 @@ public class BeerDroid extends Activity {
 			//prepare request
 			final ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			final HttpClient client = new DefaultHttpClient();
-			final HttpGet get = new HttpGet(Config.base_url + Config.super_search_url + URLEncoder.encode(query[0]));
+			final HttpGet get = new HttpGet(Config.baseUrl + Config.superSearchUrl + URLEncoder.encode(query[0]));
 			Log.d(TAG, "Fetching url: " + get.getURI().toString());
-			String search_results = null;
+			String searchResults = null;
 			//call server
 			try {
-				search_results = client.execute(get, responseHandler);
+				searchResults = client.execute(get, responseHandler);
 			} catch (ClientProtocolException e) {
 				Log.e(TAG, "Error while searching: " + e.toString());
 				return null;
@@ -124,7 +124,7 @@ public class BeerDroid extends Activity {
 				return null;
 			}
 
-			return search_results;
+			return searchResults;
 		}
 
 		@Override
@@ -140,12 +140,12 @@ public class BeerDroid extends Activity {
 
 	/**
 	 * Updates the listView of results the user sees
-	 * @param search_results	a string in json format with search results
+	 * @param searchResults	a string in json format with search results
 	 */
-	public void showResults(String search_results) {
+	public void showResults(String searchResults) {
 		resultList = new ArrayList<Beer>();
 		try {
-			final JSONArray jsonResults = new JSONArray(search_results);
+			final JSONArray jsonResults = new JSONArray(searchResults);
 			for (int i = 0; i < jsonResults.length(); i++) {
 				resultList.add(new Beer(jsonResults.getJSONObject(i)));
 			}
@@ -183,10 +183,10 @@ public class BeerDroid extends Activity {
 					bt.setText(b.name);
 				}
 				if (br != null) {
-					br.setText(b.ba_rating);
+					br.setText(b.baRating);
 				}
 				if (bb != null) {
-					bb.setText(b.brewery_name);
+					bb.setText(b.breweryName);
 				}
 			}
 			return v;

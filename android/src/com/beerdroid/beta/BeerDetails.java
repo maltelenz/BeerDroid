@@ -8,7 +8,7 @@ import android.widget.TextView;
 public class BeerDetails extends Activity {
 
 	private Beer beer;
-	private String TAG = "BeerDetails";
+	private static final String TAG = "BeerDetails";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,14 +18,14 @@ public class BeerDetails extends Activity {
 		
 		setContentView(R.layout.beer_details);
 		
-		if (beer.brewery_name != null) {
+		if (beer.breweryName != null) {
 			final TextView nameView = (TextView) findViewById(R.id.beer_details_name);
 			nameView.setText(beer.name);
 		}
 
-		if (beer.brewery_name != null) {
+		if (beer.breweryName != null) {
 			final TextView breweryView = (TextView) findViewById(R.id.beer_details_brewery);
-			breweryView.setText(beer.brewery_name);
+			breweryView.setText(beer.breweryName);
 		}
 		
 		if (beer.style != null) {
@@ -33,20 +33,20 @@ public class BeerDetails extends Activity {
 			styleView.setText(beer.style);
 		}
 
-		if (beer.ba_rating != null) {
+		if (beer.baRating != null) {
 			final TextView baRatingView = (TextView) findViewById(R.id.beer_details_ba_rating);
-			baRatingView.setText(beer.ba_rating);
+			baRatingView.setText(beer.baRating);
 		}
 		
-		if (beer.systemet_size != null) {
+		if (beer.systemetSize != null) {
 			final TextView systemetSizeView = (TextView) findViewById(R.id.beer_details_systemet_size);
-			Log.d(TAG , "beer.systemet_size = " + beer.systemet_size);
-			systemetSizeView.setText(beer.systemet_size.toString());
+			Log.d(TAG , "beer.systemet_size = " + beer.systemetSize);
+			systemetSizeView.setText(beer.systemetSize.toString());
 		}
 		
-		if (beer.systemet_price != null) {
+		if (beer.systemetPrice != null) {
 			final TextView systemetPriceView = (TextView) findViewById(R.id.beer_details_systemet_price);
-			systemetPriceView.setText(beer.systemet_price.toString());
+			systemetPriceView.setText(beer.systemetPrice.toString());
 		}
 
 		super.onCreate(savedInstanceState);
