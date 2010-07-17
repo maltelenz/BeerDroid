@@ -46,8 +46,6 @@ public class BeerDroid extends Activity {
 
 	private ListView resultView;
 
-
-
 	/**
 	 *  Called when the activity is first created.
 	 *  @param savedInstanceState 
@@ -85,7 +83,6 @@ public class BeerDroid extends Activity {
                 showResultDetails(id);
             }
         });
-        
 	}
 
 	/**
@@ -212,6 +209,4 @@ public class BeerDroid extends Activity {
 		busy.dismiss();
 		super.onDestroy();
 	}
-
-	
 }

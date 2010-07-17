@@ -8,7 +8,7 @@ module HomeHelper
   #
   def fetch_ba_id_google(query,nr_results = 1)
     url = "http://ajax.googleapis.com/ajax/services/search/web" + \
-    "?v=1.0&q=site:http://beeradvocate.com/beer/profile/%20" + URI.escape(query)
+    "?v=1.0&rsz=8&q=site:http://beeradvocate.com/beer/profile/%20" + URI.escape(query)
     page_stream = open(url)
     page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
 
