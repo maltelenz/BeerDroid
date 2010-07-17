@@ -71,8 +71,12 @@ public class BeerDroid extends Activity {
 			public void onClick(View v) {
 				//fetch the entered search query
 				final String query = searchField.getText().toString();
-				new DoSearch().execute(query);
-				busy.show();
+				if (!("".equals(query))) {
+					new DoSearch().execute(query);
+					busy.show();
+				} else {
+					Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 		
