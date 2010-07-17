@@ -32,6 +32,9 @@ public class BeerDetails extends Activity {
 		final TextView styleView = (TextView) findViewById(R.id.beer_details_style);
 		styleView.setText(beer.getStyle());
 
+		final TextView abvView = (TextView) findViewById(R.id.beer_details_abv);
+		abvView.setText(beer.getAbv() + " %");
+
 		final TextView baRatingView = (TextView) findViewById(R.id.beer_details_ba_rating);
 		baRatingView.setText(beer.getBaRating());
 

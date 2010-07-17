@@ -1,99 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/beer_details"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#CCCCCC"
-    android:stretchColumns="0">
-
-    <TableRow>
-        <TextView
-        	style="@style/Header"
-            android:text="Name:"
-            />
-    </TableRow>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	      android:id="@+id/beer_details"
+	      android:layout_width="fill_parent"
+	      android:layout_height="fill_parent"
+	      android:background="#CCCCCC"
+	      android:orientation="vertical">
+  
+  <TextView
+     style="@style/Header"
+     android:text="Name:"
+     />
+  
+  <TextView
+     android:id="@+id/beer_details_name"
+     style="@style/Data"
+     />
+  
+  <TextView
+     android:text="Brewery:"
+     style="@style/Header"
+     />
+  
+  <TextView
+     android:id="@+id/beer_details_brewery"
+     style="@style/Data"
+     />
+  
+  <TextView
+     android:text="Style:"
+     style="@style/Header"
+     />
+  
+  <TextView
+     android:id="@+id/beer_details_style"
+     style="@style/Data"
+     />
+  
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    		style="@style/SameRowLayout">
+    <TextView
+       android:text="ABV:"
+       style="@style/Header"
+       android:layout_width="wrap_content"
+       />
+    <TextView
+       android:id="@+id/beer_details_abv"
+       style="@style/Data"
+       android:layout_width="wrap_content"
+       />
+  </LinearLayout>
+  
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    		style="@style/SameRowLayout">
+    <TextView
+       android:text="BA Rating:"
+       style="@style/Header"
+       android:layout_width="wrap_content"
+       />
+    <TextView
+       android:id="@+id/beer_details_ba_rating"
+       style="@style/Data"
+       android:layout_width="wrap_content"
+       />
+  </LinearLayout>
+  
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    		style="@style/SameRowLayout">
+    <TextView
+       android:text="Size at Systembolaget (ml):"
+       style="@style/Header"
+       android:layout_width="wrap_content"
+       />
     
-	<TableRow>
-	        <TextView
-        	android:id="@+id/beer_details_name"
-        	style="@style/Data"
-            />
-	</TableRow>
+    <TextView
+       android:id="@+id/beer_details_systemet_size"
+       style="@style/Data"
+       android:layout_width="wrap_content"
+       />
+  </LinearLayout>
+  
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    		style="@style/SameRowLayout">
+    <TextView
+       android:text="Price at Systembolaget (SEK):"
+       style="@style/Header"
+       android:layout_width="wrap_content"
+       />
     
-    <TableRow>
-        <TextView
-            android:text="Brewery:"
-        	style="@style/Header"
-			 />
-    </TableRow>
-    
-	<TableRow>
-        <TextView
-        	android:id="@+id/beer_details_brewery"
-        	style="@style/Data"
-            />
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:text="Style:"
-        	style="@style/Header"
-			 />
-    </TableRow>
-    
-	<TableRow>
-        <TextView
-        	android:id="@+id/beer_details_style"
-        	style="@style/Data"
-            />
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:text="BA Rating:"
-        	style="@style/Header"
-			 />
-    </TableRow>
-    
-	<TableRow>
-        <TextView
-        	android:id="@+id/beer_details_ba_rating"
-        	style="@style/Data"
-            />
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:text="Size at Systembolaget (ml):"
-        	style="@style/Header"
-			 />
-    </TableRow>
-    
-	<TableRow>
-        <TextView
-        	android:id="@+id/beer_details_systemet_size"
-        	style="@style/Data"
-            />
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:text="Price at Systembolaget (SEK):"
-        	style="@style/Header"
-			 />
-    </TableRow>
-    
-	<TableRow>
-        <TextView
-        	android:id="@+id/beer_details_systemet_price"
-        	style="@style/Data"
-            />
-    </TableRow>
-    <TableRow>
-        <Button android:id="@+id/ba_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="5dp"
-			android:text="Show on beeradvocate" />
-    </TableRow>
-</TableLayout>
+    <TextView
+       android:id="@+id/beer_details_systemet_price"
+       style="@style/Data"
+       android:layout_width="wrap_content"
+       />
+  </LinearLayout>
+  
+  <Button android:id="@+id/ba_button"
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:layout_margin="5dp"
+	  android:text="Show on beeradvocate" />
+</LinearLayout>

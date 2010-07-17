@@ -18,6 +18,7 @@ public class Beer {
 	private static final String KEY_BA_BREWERY = "brewery";
 	private static final String KEY_BA_BEER = "beer";
 	private static final String KEY_BREWERY_NAME = "brewery_name";
+	private static final String KEY_ABV = "abv";
 
 	private static final String TAG = "Beer";
 
@@ -29,7 +30,7 @@ public class Beer {
 	public Integer systemetPrice;
 	public Integer baBrewery;
 	public Integer baBeer;
-
+	public Double abv;
 
 	public Beer(JSONObject json) {
 		try {
@@ -63,6 +64,11 @@ public class Beer {
 		} catch (JSONException e) {
 			Log.d(TAG, "No brewery_name found: " + e.toString());
 		}
+		try {
+			abv = json.getDouble(KEY_ABV);
+		} catch (JSONException e) {
+			Log.d(TAG, "No abv found: " + e.toString());
+		}
 		JSONObject baId;
 		try {
 			baId = json.getJSONObject(KEY_BA_ID);
@@ -90,7 +96,7 @@ public class Beer {
 	 */
 	
 	/**
-	 * Returns beer name or "-" if not set
+	 * Returns beer name or EMPTY_DISPLAY_STRING if not set
 	 * @return
 	 */
 	public String getName() {
@@ -109,7 +115,7 @@ public class Beer {
 	}
 	
 	/**
-	 * Returns beer style or "-" if not set
+	 * Returns beer style or EMPTY_DISPLAY_STRING if not set
 	 * @return
 	 */
 	public String getStyle() {
@@ -128,7 +134,7 @@ public class Beer {
 	}
 
 	/**
-	 * Returns beers rating on beeradvocate.com or "-" if not set
+	 * Returns beers rating on beeradvocate.com or EMPTY_DISPLAY_STRING if not set
 	 * @return
 	 */
 	public String getBaRating() {
@@ -147,7 +153,7 @@ public class Beer {
 	}
 
 	/**
-	 * Returns brewery name or "-" if not set
+	 * Returns brewery name or EMPTY_DISPLAY_STRING if not set
 	 * @return
 	 */
 	public String getBreweryName() {
@@ -166,7 +172,7 @@ public class Beer {
 	}
 
 	/**
-	 * Returns the beers price at systembolaget or "-" if not set
+	 * Returns the beers price at systembolaget or EMPTY_DISPLAY_STRING if not set
 	 * @return
 	 */
 	public String getSystemetPrice() {
@@ -185,7 +191,7 @@ public class Beer {
 	}
 
 	/**
-	 * Returns brewery id from beeradvocate.com or "-" if not set
+	 * Returns brewery id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set
 	 * @return
 	 */
 	public String getBaBrewery() {
@@ -204,7 +210,7 @@ public class Beer {
 	}
 
 	/**
-	 * Returns beer id from beeradvocate.com or "-" if not set
+	 * Returns beer id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set
 	 * @return
 	 */
 	public String getBaBeer() {
@@ -223,7 +229,7 @@ public class Beer {
 	}
 
 	/**
-	 * Returns size of systembolaget containers or "-" if not set.
+	 * Returns size of systembolaget containers or EMPTY_DISPLAY_STRING if not set.
 	 * @return
 	 */
 	public String getSystemetSize() {
@@ -234,11 +240,30 @@ public class Beer {
 	}
 
 	/**
-	 * Saves size of systemet containers.
+	 * Saves abv.
 	 * @param newSystemetSize
 	 */
 	public void setSystemetSize(Integer newSystemetSize) {
 		this.systemetSize = newSystemetSize;
+	}
+	
+	/**
+	 * Returns abv or EMPTY_DISPLAY_STRING if not set.
+	 * @return
+	 */
+	public String getAbv() {
+		if (abv != null) {
+			return abv.toString();
+		}
+		return EMPTY_DISPLAY_STRING;
+	}
+
+	/**
+	 * Saves size of systemet containers.
+	 * @param newSystemetSize
+	 */
+	public void setAbv(Double newAbv) {
+		this.abv = newAbv;
 	}
 
 }
