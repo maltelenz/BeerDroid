@@ -193,13 +193,13 @@ public class BeerDroid extends Activity {
 				final TextView br = (TextView) v.findViewById(R.id.beer_rating);
 				final TextView bb = (TextView) v.findViewById(R.id.beer_brewery);
 				if (bt != null) {
-					bt.setText(b.name);
+					bt.setText(b.getName());
 				}
 				if (br != null) {
-					br.setText(b.baRating);
+					br.setText(b.getBaRating());
 				}
 				if (bb != null) {
-					bb.setText(b.breweryName);
+					bb.setText(b.getBreweryName());
 				}
 			}
 			return v;
