@@ -31,19 +31,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class BeerDroid extends Activity {
 
-	private EditText searchField;
-
 	public static final String TAG = "BeerDroid"; //Application name for logging
-
-	private ProgressDialog busy;
 
 	public static ArrayList<Beer> resultList;
 
+	private EditText searchField;
+
+	private ProgressDialog busy;
+
 	private ListView resultView;
+
+
 
 	/**
 	 *  Called when the activity is first created.
@@ -117,13 +120,10 @@ public class BeerDroid extends Activity {
 			try {
 				searchResults = client.execute(get, responseHandler);
 			} catch (ClientProtocolException e) {
-				Log.e(TAG, "Error while searching: " + e.toString());
-				return null;
+				Log.e(TAG, "ClientProtocolException while searching: " + e.toString());
 			} catch (IOException e) {
-				Log.e(TAG, "Error while searching: " + e.toString());
-				return null;
+				Log.e(TAG, "IOException while searching: " + e.toString());
 			}
-
 			return searchResults;
 		}
 
@@ -133,6 +133,10 @@ public class BeerDroid extends Activity {
 			busy.hide();
 			if (results != null) {
 				showResults(results);
+			} else {
+				Log.w(TAG, "Something went wrong in server contact.");
+				//show message to the user about this
+				Toast.makeText(getBaseContext(), "Could not contact server", Toast.LENGTH_LONG).show();
 			}
 			super.onPostExecute(results);
 		}
@@ -146,7 +150,13 @@ public class BeerDroid extends Activity {
 		resultList = new ArrayList<Beer>();
 		try {
 			final JSONArray jsonResults = new JSONArray(searchResults);
-			for (int i = 0; i < jsonResults.length(); i++) {
+			
+			//check if we have any hits
+			if (jsonResults.length() == 0) {
+				Toast.makeText(this, "No beers found", Toast.LENGTH_LONG);
+			}
+			
+			for (int i = 0; i < jsonResults.length(); i = i + 1) {
 				resultList.add(new Beer(jsonResults.getJSONObject(i)));
 			}
 		} catch (JSONException e) {

@@ -7,8 +7,9 @@ import android.widget.TextView;
 
 public class BeerDetails extends Activity {
 
-	private Beer beer;
 	private static final String TAG = "BeerDetails";
+
+	private Beer beer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

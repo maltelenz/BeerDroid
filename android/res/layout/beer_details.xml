@@ -9,7 +9,7 @@
     <TableRow>
         <TextView
         	style="@style/Header"
-            android:text="Name"
+            android:text="Name:"
             />
     </TableRow>
     
@@ -22,7 +22,7 @@
     
     <TableRow>
         <TextView
-            android:text="Brewery"
+            android:text="Brewery:"
         	style="@style/Header"
 			 />
     </TableRow>
@@ -36,7 +36,7 @@
 
     <TableRow>
         <TextView
-            android:text="Style"
+            android:text="Style:"
         	style="@style/Header"
 			 />
     </TableRow>
@@ -50,7 +50,7 @@
 
     <TableRow>
         <TextView
-            android:text="BA Rating"
+            android:text="BA Rating:"
         	style="@style/Header"
 			 />
     </TableRow>
@@ -64,7 +64,7 @@
 
     <TableRow>
         <TextView
-            android:text="Size at Systembolaget (ml)"
+            android:text="Size at Systembolaget (ml):"
         	style="@style/Header"
 			 />
     </TableRow>
@@ -78,7 +78,7 @@
 
     <TableRow>
         <TextView
-            android:text="Price at Systembolaget (SEK)"
+            android:text="Price at Systembolaget (SEK):"
         	style="@style/Header"
 			 />
     </TableRow>
