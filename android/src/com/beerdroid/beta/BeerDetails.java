@@ -43,19 +43,22 @@ public class BeerDetails extends Activity {
 
 		//make beeradvocate button clickable if we have their ids
 		final Button beerAdvocateButton = (Button) findViewById(R.id.ba_button);
-		beerAdvocateButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//create and start a browser intent
-				final Intent showBeerAdvocateIntent = new Intent();
-				showBeerAdvocateIntent.setAction(Intent.ACTION_VIEW);
-				showBeerAdvocateIntent.setData(
-						Uri.parse(Config.beerAdvocateBaseUrl + Config.beerAdvocateBeerUrl + beer.baBrewery + "/" + beer.baBeer)
-					);
-				startActivity(showBeerAdvocateIntent);
-			}
-		});
-
+		if (beer.baBrewery != null && beer.baBeer != null) {
+			beerAdvocateButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					//create and start a browser intent
+					final Intent showBeerAdvocateIntent = new Intent();
+					showBeerAdvocateIntent.setAction(Intent.ACTION_VIEW);
+					showBeerAdvocateIntent.setData(
+							Uri.parse(Config.beerAdvocateBaseUrl + Config.beerAdvocateBeerUrl + beer.baBrewery + "/" + beer.baBeer)
+						);
+					startActivity(showBeerAdvocateIntent);
+				}
+			});
+		} else {
+			beerAdvocateButton.setEnabled(false);
+		}
 		
 		super.onCreate(savedInstanceState);
 	}
