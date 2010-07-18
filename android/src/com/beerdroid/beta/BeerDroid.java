@@ -46,6 +46,8 @@ public class BeerDroid extends Activity {
 
 	private ListView resultView;
 
+	private DatabaseAdapter dBHelper;
+
 	/**
 	 *  Called when the activity is first created.
 	 *  @param savedInstanceState 
@@ -55,6 +57,10 @@ public class BeerDroid extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		//connect to database
+		dBHelper = new DatabaseAdapter(this);
+        dBHelper.open();
+		
 		searchField = (EditText) findViewById(R.id.search_field);
 
 		//prepare a progress dialog
@@ -159,7 +165,7 @@ public class BeerDroid extends Activity {
 			}
 			
 			for (int i = 0; i < jsonResults.length(); i = i + 1) {
-				resultList.add(new Beer(jsonResults.getJSONObject(i)));
+				resultList.add(new Beer(jsonResults.getJSONObject(i), dBHelper));
 			}
 		} catch (JSONException e) {
 			Log.e(TAG, "Could not decode results: " + e.toString());
@@ -210,7 +216,11 @@ public class BeerDroid extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		//dismiss dialog
 		busy.dismiss();
+		//close database connection
+		dBHelper.close();
+		
 		super.onDestroy();
 	}
 }

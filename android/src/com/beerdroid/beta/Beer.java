@@ -32,7 +32,12 @@ public class Beer {
 	public Integer baBeer;
 	public Double abv;
 
-	public Beer(JSONObject json) {
+	/**
+	 * Create the beer object from received JSON data
+	 * @param json	beer object from server in JSON
+	 * @param dBHelper	DatabaseAdapter for database connection
+	 */
+	public Beer(JSONObject json, DatabaseAdapter dBHelper) {
 		try {
 			setName(json.getString(KEY_NAME));
 		} catch (JSONException e) {
@@ -86,9 +91,15 @@ public class Beer {
 			Log.d(TAG, "No ba_id found: " + e.toString());
 		}
 
-
+		//beer is fully initialized, save it to database if not already there
+		if (!dBHelper.beerExists(this)) {
+			//save beer
+			dBHelper.createBeer(this);
+		}
+		// TODO else {
+		//	dBHelper.updateBeer(this);
+		//}
 	}
-
 	
 	/**
 	 * Methods for getting and setting all the fields,
