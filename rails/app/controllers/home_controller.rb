@@ -68,7 +68,7 @@ class HomeController < ApplicationController
   #  }
   #
   def get_systemet_by_name
-    render :json => fetch_systemet_info_by_name(params[:query])
+    render :json => fetch_systemet_info_by_name(params[:query], :county => params[:county])
   end
 
   #takes a string query and fetches combined info from

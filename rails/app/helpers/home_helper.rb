@@ -79,7 +79,13 @@ module HomeHelper
   #    :ba_id => {:brewery => brewery_id ,:beer => beer_id}
   #  }
   #
-  def fetch_systemet_info_by_name(query,nr_results=1)
+  def fetch_systemet_info_by_name(query, options = {})
+    #Default arguments
+    options.reverse_merge! :nr_results => 1, :county => nil
+    #fetch keyword arguments
+    nr_results = options[:nr_results]
+    county = options[:county]
+    
     url = "http://agent.nocrew.org/xml/ws/search/?query=" + CGI::escape(query)
     page_stream = open(url)
     page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
@@ -87,7 +93,7 @@ module HomeHelper
     page = Hpricot(page_content)
     
     #collect an array of nicely formatted results
-    results = (0..Integer(nr_results)-1).collect{
+    results = (1..Integer(nr_results)).collect{
       |i|
       #get the product
       product = page.at("//product[@count='" + i.to_s + "']")
@@ -115,13 +121,20 @@ module HomeHelper
             ba_id = nil
           end
         end
+        systemet_available = []
+
+        #if a county is given, add availability info as well
+        if county != nil
+          systemet_available = fetch_systemet_availability(systemet_id, county)
+        end
         #add the completed object to the array
         {
           :beer_name => beer_name,
           :systemet_id => systemet_id,
           :price => price,
           :size => size,
-          :ba_id => ba_id
+          :ba_id => ba_id,
+          :systemet_available => systemet_available
         }
       else
         #no more hits
@@ -132,6 +145,23 @@ module HomeHelper
     return results.uniq.compact
   end
   
+  def fetch_systemet_availability(systemet_id, county)
+    url = "http://agent.nocrew.org/xml/ws/inventory/?sysid=" + CGI::escape(systemet_id)
+    page_stream = open(url)
+    page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
+
+    page = Hpricot(page_content)
+    
+    results = page.search("//product/stores/items[@county='" + county + "']").collect{
+      |entry|
+      {
+        :store => entry[:address],
+        :nr => entry.inner_html
+      }
+    }
+    #return the array, unique and non-nil entries only
+    return results.uniq.compact
+  end
 
   #takes a string query and fetches combined info from
   # beeradvocate.com and systembolaget (via agent.nocrew.org)
