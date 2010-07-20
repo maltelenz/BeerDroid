@@ -130,6 +130,8 @@ public class BeerDroid extends Activity {
 				Log.e(TAG, "ClientProtocolException while searching: " + e.toString());
 			} catch (IOException e) {
 				Log.e(TAG, "IOException while searching: " + e.toString());
+			} catch (java.lang.IllegalArgumentException e) {
+				Log.e(TAG, "IllegalArgumentException while searching: " + e.toString());
 			}
 			return searchResults;
 		}
