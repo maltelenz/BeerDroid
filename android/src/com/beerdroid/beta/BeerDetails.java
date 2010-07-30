@@ -9,19 +9,24 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Shows details about a given beer.
+ * @author Malte Lenz
+ *
+ */
 public class BeerDetails extends Activity {
 
 	private Beer beer;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected final void onCreate(final Bundle savedInstanceState) {
 		//fetch the beer object
 		final Bundle extras = getIntent().getExtras();
 		final Long id = extras.getLong("id");
 		beer = BeerDroid.resultList.get(id.intValue());
 
 		setContentView(R.layout.beer_details);
-		
+
 		//populate all fields
 		final TextView nameView = (TextView) findViewById(R.id.beer_details_name);
 		nameView.setText(beer.getName());
@@ -49,7 +54,7 @@ public class BeerDetails extends Activity {
 		if (beer.baBrewery != null && beer.baBeer != null) {
 			beerAdvocateButton.setOnClickListener(new OnClickListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick(final View v) {
 					//create and start a browser intent
 					final Intent showBeerAdvocateIntent = new Intent();
 					showBeerAdvocateIntent.setAction(Intent.ACTION_VIEW);
@@ -62,7 +67,7 @@ public class BeerDetails extends Activity {
 		} else {
 			beerAdvocateButton.setEnabled(false);
 		}
-		
+
 		super.onCreate(savedInstanceState);
 	}
 

@@ -8,18 +8,34 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * A utility class for running database queries
+ * on the local sqlite database.
+ * @author Malte Lenz
+ *
+ */
 public class DatabaseAdapter {
 
 	//Columns in the table
+	/** Row id name. */
 	public static final String KEY_ROW_ID = "_id";
+	/** beer column name. */
 	public static final String KEY_BEER_NAME = "beer_name";
+	/** style column name. */
 	public static final String KEY_STYLE = "style";
+	/** beeradvocate.com rating column name. */
 	public static final String KEY_BA_RATING = "ba_rating";
+	/** brewery name column name. */
 	public static final String KEY_BREWERY_NAME = "brewery_name";
+	/** size at systembolaget column name. */
 	public static final String KEY_SYSTEMET_SIZE = "systemet_size";
+	/** price at systembolaget column name. */
 	public static final String KEY_SYSTEMET_PRICE = "systemet_price";
+	/** brewery id at beeradvocate.com column name. */
 	public static final String KEY_BA_BREWERY_ID = "ba_brewery_id";
+	/** beer id at beeradvocate.com column name. */
 	public static final String KEY_BA_BEER_ID = "ba_beer_id";
+	/** beer abv column name. */
 	public static final String KEY_ABV = "abv";
 
 	//name of the database
@@ -35,7 +51,7 @@ public class DatabaseAdapter {
 	private static final String TAG = "BeerDroid DatabaseAdapter";
 
 	//query for creating the beer table
-	private static final String CREATE_TABLE_BEER = 
+	private static final String CREATE_TABLE_BEER =
 		"create table " + BEER_TABLE_NAME + "("
 		+ KEY_ROW_ID + " integer primary key autoincrement,"
 		+ KEY_BEER_NAME + " text not null,"
@@ -56,18 +72,27 @@ public class DatabaseAdapter {
 	//Context from calling activity
 	private final Context mCtx;
 
+	/**
+	 * Internal helper class for creating, and updating the database.
+	 * @author Malte Lenz
+	 *
+	 */
 	private static class DatabaseHelper extends SQLiteOpenHelper {
-		DatabaseHelper(Context context) {
+		/**
+		 * Default constructor.
+		 * @param context calling context
+		 */
+		DatabaseHelper(final Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
 		@Override
-		public void onCreate(SQLiteDatabase db) {
+		public void onCreate(final SQLiteDatabase db) {
 			db.execSQL(CREATE_TABLE_BEER);
 		}
 
 		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
 			Log.w(TAG , "Upgrading database from version " + oldVersion + " to "
 					+ newVersion + ", which will destroy all old data");
 			db.execSQL("DROP TABLE IF EXISTS " + BEER_TABLE_NAME);
@@ -79,7 +104,7 @@ public class DatabaseAdapter {
 	 * save the context for later use.
 	 * @param ctx context from calling activity
 	 */
-	public DatabaseAdapter(Context ctx) {
+	public DatabaseAdapter(final Context ctx) {
 		this.mCtx = ctx;
 	}
 
@@ -87,7 +112,7 @@ public class DatabaseAdapter {
 	 * Fetch a writable database.
 	 * @return this
 	 */
-	public DatabaseAdapter open() {
+	public final DatabaseAdapter open() {
 		mDbHelper = new DatabaseHelper(mCtx);
 		mDb = mDbHelper.getWritableDatabase();
 		return this;
@@ -96,7 +121,7 @@ public class DatabaseAdapter {
 	/**
 	 * Close the database.
 	 */
-	public void close() {
+	public final void close() {
 		mDbHelper.close();
 	}
 
@@ -105,7 +130,7 @@ public class DatabaseAdapter {
 	 * @param beer a beer object
 	 * @return KEY_ROW_ID of saved beer
 	 */
-	public long createBeer(Beer beer) {
+	public final long createBeer(final Beer beer) {
 		final ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_BEER_NAME, beer.name);
 		initialValues.put(KEY_STYLE, beer.style);
@@ -122,10 +147,10 @@ public class DatabaseAdapter {
 	/**
 	 * Returns true if a beer already exists in the database.
 	 * For now only uses the name.
-	 * @param beer
+	 * @param beer the beer object to check
 	 * @return if given beer exists
 	 */
-	public boolean beerExists(Beer beer) {
+	public final boolean beerExists(final Beer beer) {
 		final Cursor beerCursor = mDb.query(true, //is distinct
 				BEER_TABLE_NAME, //name of table
 				new String[] {KEY_ROW_ID}, //fields to fetch

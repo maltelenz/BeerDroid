@@ -34,10 +34,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * Main activity which is shown when started.
+ * @author Malte Lenz
+ *
+ */
 public class BeerDroid extends Activity {
 
-	public static final String TAG = "BeerDroid"; //Application name for logging
+	private static final String TAG = "BeerDroid"; //Application name for logging
 
+	/** Contains the list of beers from the last search. */
 	public static ArrayList<Beer> resultList;
 
 	private EditText searchField;
@@ -50,17 +56,17 @@ public class BeerDroid extends Activity {
 
 	/**
 	 *  Called when the activity is first created.
-	 *  @param savedInstanceState 
+	 *  @param savedInstanceState state from last time, unused by us.
 	 *  */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		//connect to database
 		dBHelper = new DatabaseAdapter(this);
         dBHelper.open();
-		
+
 		searchField = (EditText) findViewById(R.id.search_field);
 
 		//prepare a progress dialog
@@ -68,13 +74,13 @@ public class BeerDroid extends Activity {
 		busy.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		busy.setMessage("Contacting server...");
 		busy.setCancelable(false);
-		
+
 		//make search button clickable
 		final Button searchButton = (Button) findViewById(R.id.search_button);
 		searchButton.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View v) {
 				//fetch the entered search query
 				final String query = searchField.getText().toString();
 				if (!("".equals(query))) {
@@ -85,21 +91,21 @@ public class BeerDroid extends Activity {
 				}
 			}
 		});
-		
+
 		resultView = (ListView) findViewById(R.id.result_list);
 		resultView.setOnItemClickListener(new OnItemClickListener() {
         	@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			public void onItemClick(final AdapterView<?> parent, final View v, final int position, final long id) {
                 showResultDetails(id);
             }
         });
 	}
 
 	/**
-	 * Show a detailed view with all info on a search result
-	 * @param id
+	 * Show a detailed view with all info on a search result.
+	 * @param id which beer to show details for.
 	 */
-	protected void showResultDetails(Long id) {
+	protected final void showResultDetails(final Long id) {
 		Log.d(TAG, "showResultDetails for beer: " + resultList.get(id.intValue()).toString());
 		final Intent showDetailIntent = new Intent(this, BeerDetails.class);
 		showDetailIntent.putExtra("id", id);
@@ -108,7 +114,7 @@ public class BeerDroid extends Activity {
 
 
 	/**
-	 * Does a search in the background, calling showResults with the result
+	 * Does a search in the background, calling showResults with the result.
 	 * Run with 'new DoSearch().execute("search_query");'
 	 * @author malte
 	 *
@@ -116,7 +122,7 @@ public class BeerDroid extends Activity {
 	private class DoSearch extends AsyncTask<String, Object, String> {
 
 		@Override
-		protected String doInBackground(String... query) {
+		protected String doInBackground(final String... query) {
 			//prepare request
 			final ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			final HttpClient client = new DefaultHttpClient();
@@ -137,7 +143,7 @@ public class BeerDroid extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(String results) {
+		protected void onPostExecute(final String results) {
 			Log.d(TAG, "Got result: " + results);
 			busy.hide();
 			if (results != null) {
@@ -152,44 +158,55 @@ public class BeerDroid extends Activity {
 	}
 
 	/**
-	 * Updates the listView of results the user sees
+	 * Updates the listView of results the user sees.
 	 * @param searchResults	a string in json format with search results
 	 */
-	public void showResults(String searchResults) {
+	public final void showResults(final String searchResults) {
 		resultList = new ArrayList<Beer>();
 		try {
 			final JSONArray jsonResults = new JSONArray(searchResults);
-			
+
 			Log.d(TAG, "Number of beers found: " + jsonResults.length());
 			//check if we have any hits
 			if (jsonResults.length() == 0) {
 				Toast.makeText(getBaseContext(), "No beers found", Toast.LENGTH_LONG).show();
 			}
-			
+
 			for (int i = 0; i < jsonResults.length(); i = i + 1) {
 				resultList.add(new Beer(jsonResults.getJSONObject(i), dBHelper));
 			}
 		} catch (JSONException e) {
 			Log.e(TAG, "Could not decode results: " + e.toString());
 		}
-		
+
 		Log.d(TAG, "Final list of search results: " + resultList.toString());
-		
+
 		final ResultAdapter resultAdapter = new ResultAdapter(this, R.layout.result_list_item, resultList);
 		resultView.setAdapter(resultAdapter);
 	}
 
+	/**
+	 * Adapter used for showing the list of results from a search.
+	 * @author Malte Lenz
+	 *
+	 */
 	private class ResultAdapter extends ArrayAdapter<Beer> {
 
 		private List<Beer> beers;
 
-		public ResultAdapter(Context context, int textViewResourceId, List<Beer> items) {
+		/**
+		 * Constructor which saves the list of beers to a local field.
+		 * @param context calling context
+		 * @param textViewResourceId what text resource (xml file) to use for display
+		 * @param items list of beers
+		 */
+		public ResultAdapter(final Context context, final int textViewResourceId, final List<Beer> items) {
 			super(context, textViewResourceId, items);
 			beers = items;
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, final View convertView, final ViewGroup parent) {
 			//Log.d(TAG, "Showing beer in position: " + position);
 			View v = convertView;
 			if (v == null) {
@@ -217,12 +234,12 @@ public class BeerDroid extends Activity {
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected final void onDestroy() {
 		//dismiss dialog
 		busy.dismiss();
 		//close database connection
 		dBHelper.close();
-		
+
 		super.onDestroy();
 	}
 }

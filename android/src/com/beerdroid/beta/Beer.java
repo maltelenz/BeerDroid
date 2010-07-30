@@ -5,10 +5,16 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+/**
+ * Class for info about one beer,
+ * with helpful functions for access.
+ * @author Malte Lenz
+ *
+ */
 public class Beer {
 
 	private static final String EMPTY_DISPLAY_STRING = "-";
-	
+
 	private static final String KEY_NAME = "beer_name";
 	private static final String KEY_STYLE = "style";
 	private static final String KEY_BA_RATING = "rating";
@@ -22,22 +28,31 @@ public class Beer {
 
 	private static final String TAG = "Beer";
 
+	/** Name of the beer. */
 	public String name;
+	/** Style name of the beer. */
 	public String style;
+	/** Rating on beeradvocate.com in a string. */
 	public String baRating;
+	/** name of the brewery. */
 	public String breweryName;
+	/** size of containers from systembolaget, sweden. */
 	public Integer systemetSize;
+	/** price at systembolaget, sweden. */
 	public Integer systemetPrice;
+	/** Id of brewery on beeradvocate.com. */
 	public Integer baBrewery;
+	/** Id of beer on beeradvocate.com. */
 	public Integer baBeer;
+	/** Alcohol content by volume in percent. */
 	public Double abv;
 
 	/**
-	 * Create the beer object from received JSON data
+	 * Create the beer object from received JSON data.
 	 * @param json	beer object from server in JSON
 	 * @param dBHelper	DatabaseAdapter for database connection
 	 */
-	public Beer(JSONObject json, DatabaseAdapter dBHelper) {
+	public Beer(final JSONObject json, final DatabaseAdapter dBHelper) {
 		try {
 			setName(json.getString(KEY_NAME));
 		} catch (JSONException e) {
@@ -100,17 +115,17 @@ public class Beer {
 		//	dBHelper.updateBeer(this);
 		//}
 	}
-	
+
 	/**
 	 * Methods for getting and setting all the fields,
 	 * with defaults for when fields are null
 	 */
-	
+
 	/**
-	 * Returns beer name or EMPTY_DISPLAY_STRING if not set
-	 * @return
+	 * Returns beer name or EMPTY_DISPLAY_STRING if not set.
+	 * @return beer name or EMPTY_DISPLAY_STRING if not set
 	 */
-	public String getName() {
+	public final String getName() {
 		if (name != null) {
 			return name;
 		}
@@ -118,18 +133,18 @@ public class Beer {
 	}
 
 	/**
-	 * Saves beer name
-	 * @param name
+	 * Saves beer name.
+	 * @param newName to save
 	 */
-	public void setName(String newName) {
+	public final void setName(final String newName) {
 		this.name = newName;
 	}
-	
+
 	/**
-	 * Returns beer style or EMPTY_DISPLAY_STRING if not set
-	 * @return
+	 * Returns beer style or EMPTY_DISPLAY_STRING if not set.
+	 * @return beer style or EMPTY_DISPLAY_STRING if not set
 	 */
-	public String getStyle() {
+	public final String getStyle() {
 		if (style != null) {
 			return style;
 		}
@@ -137,18 +152,18 @@ public class Beer {
 	}
 
 	/**
-	 * Saves beer style
-	 * @param name
+	 * Saves beer style.
+	 * @param newStyle of beer to save
 	 */
-	public void setStyle(String newStyle) {
+	public final void setStyle(final String newStyle) {
 		this.style = newStyle;
 	}
 
 	/**
-	 * Returns beers rating on beeradvocate.com or EMPTY_DISPLAY_STRING if not set
-	 * @return
+	 * Returns beers rating on beeradvocate.com or EMPTY_DISPLAY_STRING if not set.
+	 * @return beers rating on beeradvocate.com or EMPTY_DISPLAY_STRING if not set
 	 */
-	public String getBaRating() {
+	public final String getBaRating() {
 		if (baRating != null) {
 			return baRating;
 		}
@@ -156,18 +171,18 @@ public class Beer {
 	}
 
 	/**
-	 * Saves beers rating on beeradvocate.com
-	 * @param name
+	 * Saves beers rating on beeradvocate.com.
+	 * @param newBaRating beers rating on beeradvocate.com as a String
 	 */
-	public void setBaRating(String newBaRating) {
+	public final void setBaRating(final String newBaRating) {
 		this.baRating = newBaRating;
 	}
 
 	/**
-	 * Returns brewery name or EMPTY_DISPLAY_STRING if not set
-	 * @return
+	 * Returns brewery name or EMPTY_DISPLAY_STRING if not set.
+	 * @return brewery name or EMPTY_DISPLAY_STRING if not set
 	 */
-	public String getBreweryName() {
+	public final String getBreweryName() {
 		if (breweryName != null) {
 			return breweryName;
 		}
@@ -175,18 +190,18 @@ public class Beer {
 	}
 
 	/**
-	 * Saves brewery name
-	 * @param name
+	 * Saves brewery name.
+	 * @param newBreweryName to save
 	 */
-	public void setBreweryName(String newBreweryName) {
+	public final void setBreweryName(final String newBreweryName) {
 		this.breweryName = newBreweryName;
 	}
 
 	/**
-	 * Returns the beers price at systembolaget or EMPTY_DISPLAY_STRING if not set
-	 * @return
+	 * Returns the beers price at systembolaget or EMPTY_DISPLAY_STRING if not set.
+	 * @return the beers price at systembolaget or EMPTY_DISPLAY_STRING if not set
 	 */
-	public String getSystemetPrice() {
+	public final String getSystemetPrice() {
 		if (systemetPrice != null) {
 			return systemetPrice.toString();
 		}
@@ -194,18 +209,18 @@ public class Beer {
 	}
 
 	/**
-	 * Saves the beers price at systembolaget
-	 * @param name
+	 * Saves the beers price at systembolaget.
+	 * @param newSystemetPrice the beers price at systembolaget
 	 */
-	public void setSystemetPrice(Integer newSystemetPrice) {
+	public final void setSystemetPrice(final Integer newSystemetPrice) {
 		this.systemetPrice = newSystemetPrice;
 	}
 
 	/**
-	 * Returns brewery id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set
-	 * @return
+	 * Returns brewery id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set.
+	 * @return brewery id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set
 	 */
-	public String getBaBrewery() {
+	public final String getBaBrewery() {
 		if (baBrewery != null) {
 			return baBrewery.toString();
 		}
@@ -213,18 +228,18 @@ public class Beer {
 	}
 
 	/**
-	 * Saves brewery id from beeradvocate.com
-	 * @param name
+	 * Saves brewery id from beeradvocate.com.
+	 * @param newBaBrewery id of the brewery on beeradvocate.com to save
 	 */
-	public void setBaBrewery(Integer newBaBrewery) {
+	public final void setBaBrewery(final Integer newBaBrewery) {
 		this.baBrewery = newBaBrewery;
 	}
 
 	/**
-	 * Returns beer id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set
-	 * @return
+	 * Returns beer id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set.
+	 * @return beer id from beeradvocate.com or EMPTY_DISPLAY_STRING if not set.
 	 */
-	public String getBaBeer() {
+	public final String getBaBeer() {
 		if (baBeer != null) {
 			return baBeer.toString();
 		}
@@ -232,18 +247,18 @@ public class Beer {
 	}
 
 	/**
-	 * Saves beer name
-	 * @param name
+	 * Saves beer name.
+	 * @param newBaBeer name of the beer on beeradvocate.com
 	 */
-	public void setBaBeer(Integer newBaBeer) {
+	public final void setBaBeer(final Integer newBaBeer) {
 		this.baBeer = newBaBeer;
 	}
 
 	/**
 	 * Returns size of systembolaget containers or EMPTY_DISPLAY_STRING if not set.
-	 * @return
+	 * @return size of systembolaget containers or EMPTY_DISPLAY_STRING if not set.
 	 */
-	public String getSystemetSize() {
+	public final String getSystemetSize() {
 		if (systemetSize != null) {
 			return systemetSize.toString();
 		}
@@ -252,17 +267,17 @@ public class Beer {
 
 	/**
 	 * Saves abv.
-	 * @param newSystemetSize
+	 * @param newSystemetSize size of containers at systemet to save
 	 */
-	public void setSystemetSize(Integer newSystemetSize) {
+	public final void setSystemetSize(final Integer newSystemetSize) {
 		this.systemetSize = newSystemetSize;
 	}
-	
+
 	/**
 	 * Returns abv or EMPTY_DISPLAY_STRING if not set.
-	 * @return
+	 * @return abv or EMPTY_DISPLAY_STRING if not set
 	 */
-	public String getAbv() {
+	public final String getAbv() {
 		if (abv != null) {
 			return abv.toString();
 		}
@@ -271,9 +286,9 @@ public class Beer {
 
 	/**
 	 * Saves size of systemet containers.
-	 * @param newSystemetSize
+	 * @param newAbv Alcohol content to set
 	 */
-	public void setAbv(Double newAbv) {
+	public final void setAbv(final Double newAbv) {
 		this.abv = newAbv;
 	}
 
