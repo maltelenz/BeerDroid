@@ -1,5 +1,10 @@
 package com.beerdroid.beta;
 
+/**
+ * File for setting global configuration options.
+ * @author Malte Lenz
+ *
+ */
 public final class Config {
 	
 	/*****
@@ -13,8 +18,17 @@ public final class Config {
 	/*****
 	 * Anything below here should NOT need to be changed
 	 */
+	/** Path to super search. */
 	public static String superSearchUrl = "supersearch/";
-	
+
+	/** Base url for beeradvocate.com. */
 	public static String beerAdvocateBaseUrl = "http://beeradvocate.com";
+	/** path to beer info display on beeradvocate.com. */
 	public static String beerAdvocateBeerUrl = "/beer/profile/";
+
+
+	/**
+	 * Default unused constructor.
+	 */
+	private Config() { }
 }

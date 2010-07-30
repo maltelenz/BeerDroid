@@ -18,10 +18,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -43,6 +48,8 @@ public class BeerDroid extends Activity {
 
 	private static final String TAG = "BeerDroid"; //Application name for logging
 
+	private static final int MENU_PREFERENCES = 0;
+
 	/** Contains the list of beers from the last search. */
 	public static ArrayList<Beer> resultList;
 
@@ -54,6 +61,8 @@ public class BeerDroid extends Activity {
 
 	private DatabaseAdapter dBHelper;
 
+	private Resources res;
+
 	/**
 	 *  Called when the activity is first created.
 	 *  @param savedInstanceState state from last time, unused by us.
@@ -62,6 +71,8 @@ public class BeerDroid extends Activity {
 	public final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		res = getResources();
 
 		//connect to database
 		dBHelper = new DatabaseAdapter(this);
@@ -102,6 +113,35 @@ public class BeerDroid extends Activity {
 	}
 
 	/**
+	 * Creates the menu called by the menu button.
+	 * @param menu the menu to modify
+	 * @return the menu
+	 */
+	@Override
+	public final boolean onCreateOptionsMenu(final Menu menu) {
+		menu.add(Menu.NONE, MENU_PREFERENCES, Menu.NONE, "Preferences");
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	/**
+	 * Called when the user has pressed a menu item.
+	 * @param item the clicked item
+	 * @return if the click was handled
+	 */
+	@Override
+	public final boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_PREFERENCES:
+			//Start the preferences activity
+			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
+			startActivity(settingsActivity);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/**
 	 * Show a detailed view with all info on a search result.
 	 * @param id which beer to show details for.
 	 */
@@ -124,9 +164,16 @@ public class BeerDroid extends Activity {
 		@Override
 		protected String doInBackground(final String... query) {
 			//prepare request
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+			String county = sp.getString(
+					res.getString(R.string.pref_systembolaget_county_key), //the value set in preferences
+					res.getString(R.string.pref_systembolaget_county_default) //or default if none is set
+					);
+
+			String url = Config.baseUrl + Config.superSearchUrl + URLEncoder.encode(query[0]) + "/" + county;
 			final ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			final HttpClient client = new DefaultHttpClient();
-			final HttpGet get = new HttpGet(Config.baseUrl + Config.superSearchUrl + URLEncoder.encode(query[0]));
+			final HttpGet get = new HttpGet(url);
 			Log.d(TAG, "Fetching url: " + get.getURI().toString());
 			String searchResults = null;
 			//call server

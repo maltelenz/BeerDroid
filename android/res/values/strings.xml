@@ -2,5 +2,9 @@
 <resources>
     <string name="app_name">BeerDroid</string>
     <string name="beer_details_name">Beer Details</string>
+
+
+    <string name="pref_systembolaget_county_key">pref_systembolaget_county</string>
+    <string name="pref_systembolaget_county_default">Östergötland</string>
     
 </resources>

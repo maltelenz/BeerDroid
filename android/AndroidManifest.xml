@@ -3,6 +3,7 @@
       package="com.beerdroid.beta"
       android:versionCode="1"
       android:versionName="1.0">
+
     <application
     	android:icon="@drawable/icon"
     	android:debuggable="true"
@@ -16,10 +17,13 @@
         </activity>
         <activity android:name=".BeerDetails"
                   android:label="@string/beer_details_name" />
-		
-    </application>
-    <uses-sdk android:minSdkVersion="7" />
 
+		<activity
+        	android:name=".Preferences"
+	        android:label="Preferences" />
+    </application>
+    
+    <uses-sdk android:minSdkVersion="7" />
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 </manifest> 
