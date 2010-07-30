@@ -86,7 +86,7 @@ class HomeController < ApplicationController
   #  ...]
   # 
   def super_search
-    render :json => fetch_all_possible_info(params[:query])
+    render :json => fetch_all_possible_info(params[:query], { :county => params[:county] } )
   end
 
 end

@@ -85,7 +85,7 @@ module HomeHelper
     #fetch keyword arguments
     nr_results = options[:nr_results]
     county = options[:county]
-    
+
     url = "http://agent.nocrew.org/xml/ws/search/?query=" + CGI::escape(query)
     page_stream = open(url)
     page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
@@ -177,9 +177,14 @@ module HomeHelper
   #  },
   #  ...]
   # 
-  def fetch_all_possible_info(query)
+  def fetch_all_possible_info(query, options = {})
+    #Default arguments
+    options.reverse_merge! :county => nil
+    #fetch keyword arguments
+    county = options[:county]
+    
     #get up to 20 systemet entries
-    systemet_infos = fetch_systemet_info_by_name(query,20)
+    systemet_infos = fetch_systemet_info_by_name(query, {:nr_results => 20, :county => county})
     #and up to 10 beeradvocate.com ids from google
     ba_ids = fetch_ba_id_google(params[:query],10)
     #join the two result sets
@@ -199,6 +204,10 @@ module HomeHelper
             beer_info[:systemet_id] = sys_info[:systemet_id]
             beer_info[:systemet_price] = sys_info[:price]
             beer_info[:systemet_size] = sys_info[:size]
+   
+            if sys_info[:systemet_available]
+              beer_info[:systemet_available] = sys_info[:systemet_available]
+            end
             #we found one, so we can stop looking
             break
           end
