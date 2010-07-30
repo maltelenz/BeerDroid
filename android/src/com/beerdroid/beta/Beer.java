@@ -1,5 +1,9 @@
 package com.beerdroid.beta;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,6 +29,7 @@ public class Beer {
 	private static final String KEY_BA_BEER = "beer";
 	private static final String KEY_BREWERY_NAME = "brewery_name";
 	private static final String KEY_ABV = "abv";
+	private static final String KEY_SYSTEMET_AVAILABILITY = "systemet_available";
 
 	private static final String TAG = "Beer";
 
@@ -46,6 +51,8 @@ public class Beer {
 	public Integer baBeer;
 	/** Alcohol content by volume in percent. */
 	public Double abv;
+	/** Availability at different stores at systembolaget. */
+	public ArrayList<Hashtable<String, String>> systemetAvailabilityList;
 
 	/**
 	 * Create the beer object from received JSON data.
@@ -104,6 +111,19 @@ public class Beer {
 			}
 		} catch (JSONException e) {
 			Log.d(TAG, "No ba_id found: " + e.toString());
+		}
+
+		try {
+			JSONArray systemetAvailability = json.getJSONArray(KEY_SYSTEMET_AVAILABILITY);
+			for (int i = 0; i < systemetAvailability.length(); i = i + 1) {
+				JSONObject systemetStore = systemetAvailability.getJSONObject(i);
+				Hashtable<String, String> ht = new Hashtable<String, String>();
+				ht.put("nr", systemetStore.getString("nr"));
+				ht.put("store", systemetStore.getString("store"));
+				systemetAvailabilityList.add(ht);
+			}
+		} catch (JSONException e) {
+			Log.d(TAG, "No availability found: " + e.toString());
 		}
 
 		//beer is fully initialized, save it to database if not already there
