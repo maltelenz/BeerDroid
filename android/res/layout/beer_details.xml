@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/beer_details_scroll"
 	android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="fill_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	      android:id="@+id/beer_details"
 	      android:layout_width="fill_parent"
@@ -98,6 +98,14 @@
        android:layout_width="wrap_content"
        />
   </LinearLayout>
+	<LinearLayout
+    	android:id="@+id/beer_details_systemet_available_list"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:background="#CCCCCC"
+    	android:cacheColorHint="#00000000"
+    	android:orientation="vertical"
+    />
   
   <Button android:id="@+id/ba_button"
 	  android:layout_width="wrap_content"

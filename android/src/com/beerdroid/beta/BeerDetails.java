@@ -1,12 +1,17 @@
 package com.beerdroid.beta;
 
+import java.util.Hashtable;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -49,6 +54,29 @@ public class BeerDetails extends Activity {
 		final TextView systemetPriceView = (TextView) findViewById(R.id.beer_details_systemet_price);
 		systemetPriceView.setText(beer.getSystemetPrice());
 
+		if (beer.systemetAvailabilityList.size() != 0) {
+			final LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			LinearLayout list = (LinearLayout) findViewById(R.id.beer_details_systemet_available_list);
+			for (int i = 0; i < beer.systemetAvailabilityList.size(); i++) {
+
+				final Hashtable<String, String> s = beer.systemetAvailabilityList.get(i);
+				View v = vi.inflate(R.layout.systemet_available_list_item, null);
+
+				if (s != null) {
+					final TextView sname = (TextView) v.findViewById(R.id.systemet_available_store);
+					final TextView snr = (TextView) v.findViewById(R.id.systemet_available_nr);
+					if (sname != null) {
+						sname.setText(s.get(Beer.SYSTEMET_STORE_KEY));
+					}
+					if (snr != null) {
+						snr.setText(s.get(Beer.SYSTEMET_STORE_NR_KEY));
+					}
+				}
+				list.addView(v);
+			}
+		}
+
 		//make beeradvocate button clickable if we have their ids
 		final Button beerAdvocateButton = (Button) findViewById(R.id.ba_button);
 		if (beer.baBrewery != null && beer.baBeer != null) {
@@ -60,7 +88,7 @@ public class BeerDetails extends Activity {
 					showBeerAdvocateIntent.setAction(Intent.ACTION_VIEW);
 					showBeerAdvocateIntent.setData(
 							Uri.parse(Config.beerAdvocateBaseUrl + Config.beerAdvocateBeerUrl + beer.baBrewery + "/" + beer.baBeer)
-						);
+					);
 					startActivity(showBeerAdvocateIntent);
 				}
 			});
@@ -70,6 +98,4 @@ public class BeerDetails extends Activity {
 
 		super.onCreate(savedInstanceState);
 	}
-
-
 }

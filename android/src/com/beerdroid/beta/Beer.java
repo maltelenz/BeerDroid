@@ -17,6 +17,16 @@ import android.util.Log;
  */
 public class Beer {
 
+	/**
+	 * Hashtable key for nr for systemet availability.
+	 */
+	public static final String SYSTEMET_STORE_NR_KEY = "nr";
+
+	/**
+	 * Hashtable key for name of a store for systemet availability.
+	 */
+	public static final String SYSTEMET_STORE_KEY = "store";
+
 	private static final String EMPTY_DISPLAY_STRING = "-";
 
 	private static final String KEY_NAME = "beer_name";
@@ -60,6 +70,8 @@ public class Beer {
 	 * @param dBHelper	DatabaseAdapter for database connection
 	 */
 	public Beer(final JSONObject json, final DatabaseAdapter dBHelper) {
+		//initialize the availability list
+		systemetAvailabilityList = new ArrayList<Hashtable<String, String>>();
 		try {
 			setName(json.getString(KEY_NAME));
 		} catch (JSONException e) {
@@ -118,8 +130,8 @@ public class Beer {
 			for (int i = 0; i < systemetAvailability.length(); i = i + 1) {
 				JSONObject systemetStore = systemetAvailability.getJSONObject(i);
 				Hashtable<String, String> ht = new Hashtable<String, String>();
-				ht.put("nr", systemetStore.getString("nr"));
-				ht.put("store", systemetStore.getString("store"));
+				ht.put(SYSTEMET_STORE_NR_KEY, systemetStore.getString(SYSTEMET_STORE_NR_KEY));
+				ht.put(SYSTEMET_STORE_KEY, systemetStore.getString(SYSTEMET_STORE_KEY));
 				systemetAvailabilityList.add(ht);
 			}
 		} catch (JSONException e) {
