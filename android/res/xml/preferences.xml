@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	
-		<EditTextPreference android:dialogTitle="Edit county (län)"
-			android:dialogMessage="for systembolaget searches"
-			android:key="@string/pref_systembolaget_county_key"
-			android:title="Systembolaget county (län)"
-			android:summary="For availability searches"
-			android:defaultValue="@string/pref_systembolaget_county_default"/>
+
+	<EditTextPreference
+		android:dialogTitle="Edit county (län)"
+		android:dialogMessage="for systembolaget searches"
+		android:key="@string/pref_systembolaget_county_key"
+		android:title="Systembolaget county (län)"
+		android:summary="For availability searches"
+		android:defaultValue="@string/pref_systembolaget_county_default" />
 
 </PreferenceScreen>
