@@ -79,7 +79,7 @@ public class BeerDroid extends Activity {
 
 		//connect to database
 		dBHelper = new DatabaseAdapter(this);
-        dBHelper.open();
+		dBHelper.open();
 
 		searchField = (EditText) findViewById(R.id.search_field);
 
@@ -104,12 +104,12 @@ public class BeerDroid extends Activity {
 				}
 			}
 		});
-		
+
 		//search when the search button is pressed
 		searchField.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
-			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+			public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 					final String query = searchField.getText().toString();
 					if (!("".equals(query))) {
 						new DoSearch().execute(query);
@@ -117,9 +117,8 @@ public class BeerDroid extends Activity {
 					} else {
 						Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
 					}
-		            return true;
-		        }
-				else {
+					return true;
+				} else {
 					return false;
 				}
 			}
@@ -127,11 +126,11 @@ public class BeerDroid extends Activity {
 
 		resultView = (ListView) findViewById(R.id.result_list);
 		resultView.setOnItemClickListener(new OnItemClickListener() {
-        	@Override
+			@Override
 			public void onItemClick(final AdapterView<?> parent, final View v, final int position, final long id) {
-                showResultDetails(id);
-            }
-        });
+				showResultDetails(id);
+			}
+		});
 	}
 
 	/**
@@ -190,7 +189,7 @@ public class BeerDroid extends Activity {
 			String county = sp.getString(
 					res.getString(R.string.pref_systembolaget_county_key), //the value set in preferences
 					res.getString(R.string.pref_systembolaget_county_default) //or default if none is set
-					);
+			);
 
 			String url = Config.baseUrl + Config.superSearchUrl + URLEncoder.encode(query[0]) + "/" + county;
 			final ResponseHandler<String> responseHandler = new BasicResponseHandler();
