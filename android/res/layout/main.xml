@@ -19,7 +19,8 @@
 			android:layout_height="fill_parent"
 			android:editable="true"
 			android:singleLine="true"
-			android:inputType="textFilter" />
+			android:inputType="textFilter" 
+			android:imeOptions="actionSearch" />
 		<Button
 			android:id="@+id/search_button"
 			android:layout_width="wrap_content"

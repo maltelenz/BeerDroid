@@ -24,18 +24,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -89,7 +92,6 @@ public class BeerDroid extends Activity {
 		//make search button clickable
 		final Button searchButton = (Button) findViewById(R.id.search_button);
 		searchButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(final View v) {
 				//fetch the entered search query
@@ -99,6 +101,26 @@ public class BeerDroid extends Activity {
 					busy.show();
 				} else {
 					Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		
+		//search when the search button is pressed
+		searchField.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					final String query = searchField.getText().toString();
+					if (!("".equals(query))) {
+						new DoSearch().execute(query);
+						busy.show();
+					} else {
+						Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
+					}
+		            return true;
+		        }
+				else {
+					return false;
 				}
 			}
 		});
