@@ -89,4 +89,9 @@ class HomeController < ApplicationController
     render :json => fetch_all_possible_info(params[:query], { :county => params[:county] } )
   end
 
+
+  def get_ba_brewery_by_id
+    render :json => fetch_ba_brewery_info(params[:brewery])
+  end
+
 end

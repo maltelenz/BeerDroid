@@ -220,11 +220,47 @@ module HomeHelper
     #return only unique hits and remove nils
     return final_result.uniq.compact
   end
+
+  def fetch_ba_brewery_info(brewery)
+    url = "http://beeradvocate.com/beer/profile/" +  CGI::escape(brewery.to_s)
+    page_stream = open(url)
+    page_content = Iconv.conv("utf-8",page_stream.charset,page_stream.read)
+
+    page = Hpricot(page_content)
+    begin
+      #sort out the values we want
+      brewery_name = page.at("h1").inner_html
+      stats = page.at("//td[@rowspan='2'][@width='200'][@align='left'][@valign='top']").inner_html.to_s
+      avg_start = stats.index("Beer Avg:") + 10
+      avg_rating = stats[avg_start, 2]
+      if avg_rating[1]==" "
+        avg_rating = avg_rating[0]
+      end
+      nr_start = stats.index("Beers:") + 7
+      nr_to_end = stats.index("\<br /\>",nr_start).to_i - nr_start.to_i
+      nr_beers = stats[nr_start, nr_to_end]
+    rescue NoMethodError
+      #no hit
+      return nil
+    end
+    return {
+      :brewery_name => brewery_name,
+      :avg_rating => avg_rating,
+      :nr_beers => nr_beers
+    }
+  end
+
+
+
+
+
   
   #If the given object can be seen as a number
   def is_numeric?(i)
     i.to_i.to_s == i
   end
+
+
 
 
 
