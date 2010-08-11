@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BeerDroid</string>
-    <string name="beer_details_name">Beer Details</string>
+	<!-- BeerDroid -->
+	<string
+		name="app_name">BeerDroid</string>
+	<string
+		name="beer_details_name">Beer Details</string>
 
+	<!-- BeerDetails -->
+	<string
+		name="systemet_availability_header">Systemet availability in </string>
 
-    <string name="pref_systembolaget_county_key">pref_systembolaget_county</string>
-    <string name="pref_systembolaget_county_default">Östergötland</string>
-    
+	<!-- Preferences -->
+	<string
+		name="pref_systembolaget_county_key">pref_systembolaget_county</string>
+	<string
+		name="pref_systembolaget_county_default">Östergötland</string>
+
 </resources>

@@ -58,6 +58,11 @@ public class BeerDetails extends Activity {
 			final LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			LinearLayout list = (LinearLayout) findViewById(R.id.beer_details_systemet_available_list);
+			if (beer.systemetAvailabilityList.size() != 0) {
+				TextView listHeader = (TextView) vi.inflate(R.layout.text_view_header, null);
+				listHeader.setText(getResources().getString(R.string.systemet_availability_header) + " " + beer.county + ":");
+				list.addView(listHeader);
+			}
 			for (int i = 0; i < beer.systemetAvailabilityList.size(); i++) {
 
 				final Hashtable<String, String> s = beer.systemetAvailabilityList.get(i);

@@ -63,15 +63,22 @@ public class Beer {
 	public Double abv;
 	/** Availability at different stores at systembolaget. */
 	public ArrayList<Hashtable<String, String>> systemetAvailabilityList;
+	/** County for which the above availability is valid. */
+	public String county;
+
 
 	/**
 	 * Create the beer object from received JSON data.
 	 * @param json	beer object from server in JSON
 	 * @param dBHelper	DatabaseAdapter for database connection
+	 * @param newCounty county for which systemet availability is fetched
 	 */
-	public Beer(final JSONObject json, final DatabaseAdapter dBHelper) {
+	public Beer(final JSONObject json, final DatabaseAdapter dBHelper, final String newCounty) {
 		//initialize the availability list
 		systemetAvailabilityList = new ArrayList<Hashtable<String, String>>();
+		//save the county
+		county = newCounty;
+		//decode all json info
 		try {
 			setName(json.getString(KEY_NAME));
 		} catch (JSONException e) {

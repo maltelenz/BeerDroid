@@ -66,6 +66,8 @@ public class BeerDroid extends Activity {
 
 	private Resources res;
 
+	private String county;
+
 	/**
 	 *  Called when the activity is first created.
 	 *  @param savedInstanceState state from last time, unused by us.
@@ -186,7 +188,7 @@ public class BeerDroid extends Activity {
 		protected String doInBackground(final String... query) {
 			//prepare request
 			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-			String county = sp.getString(
+			county = sp.getString(
 					res.getString(R.string.pref_systembolaget_county_key), //the value set in preferences
 					res.getString(R.string.pref_systembolaget_county_default) //or default if none is set
 			);
@@ -241,7 +243,7 @@ public class BeerDroid extends Activity {
 			}
 
 			for (int i = 0; i < jsonResults.length(); i = i + 1) {
-				resultList.add(new Beer(jsonResults.getJSONObject(i), dBHelper));
+				resultList.add(new Beer(jsonResults.getJSONObject(i), dBHelper, county));
 			}
 		} catch (JSONException e) {
 			Log.e(TAG, "Could not decode results: " + e.toString());
