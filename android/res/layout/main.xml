@@ -9,7 +9,7 @@
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:background="#CCCCCC"
+		android:background="#E7E3E7"
 		android:padding="5dp">
 
 		<EditText
@@ -28,18 +28,10 @@
 			android:layout_alignParentRight="true"
 			android:text="Search" />
 	</LinearLayout>
-	<TextView
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:padding="4dp"
-		android:paddingTop="0dp"
-		android:textColor="#000000"
-		android:text="Results (click for details):"
-		android:background="@drawable/my_border" />
 	<ListView
 		android:id="@+id/result_list"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:background="#CCCCCC"
-		android:cacheColorHint="#00000000" />
+		android:background="#E7E3E7"
+		android:cacheColorHint="#E7E3E7" />
 </LinearLayout>

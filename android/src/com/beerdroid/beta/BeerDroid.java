@@ -16,6 +16,7 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,22 +51,16 @@ import android.widget.AdapterView.OnItemClickListener;
 public class BeerDroid extends Activity {
 
 	private static final String TAG = "BeerDroid"; //Application name for logging
-
-	private static final int MENU_PREFERENCES = 0;
+	private static final int MENU_SEARCH = 0;
+	private static final int MENU_PREFERENCES = 1;
 
 	/** Contains the list of beers from the last search. */
 	public static ArrayList<Beer> resultList;
-
 	private EditText searchField;
-
 	private ProgressDialog busy;
-
 	private ListView resultView;
-
 	private DatabaseAdapter dBHelper;
-
 	private Resources res;
-
 	private String county;
 
 	/**
@@ -98,7 +93,7 @@ public class BeerDroid extends Activity {
 			public void onClick(final View v) {
 				//fetch the entered search query
 				final String query = searchField.getText().toString();
-				if (!("".equals(query))) {
+				if (query.length() != 0) {
 					new DoSearch().execute(query);
 					busy.show();
 				} else {
@@ -113,7 +108,7 @@ public class BeerDroid extends Activity {
 			public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 					final String query = searchField.getText().toString();
-					if (!("".equals(query))) {
+					if (query.length() != 0) {
 						new DoSearch().execute(query);
 						busy.show();
 					} else {
@@ -126,6 +121,7 @@ public class BeerDroid extends Activity {
 			}
 		});
 
+		//set up the resultView
 		resultView = (ListView) findViewById(R.id.result_list);
 		resultView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -133,6 +129,18 @@ public class BeerDroid extends Activity {
 				showResultDetails(id);
 			}
 		});
+		
+		// Check the intent and perform search if requested 
+		Intent intent = getIntent();
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	      String query = intent.getStringExtra(SearchManager.QUERY);
+	      if (query.length() != 0) {
+	    	  new DoSearch().execute(query);
+	    	  busy.show();
+	      } else {
+	    	  Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
+	      }
+	    }
 	}
 
 	/**
@@ -142,6 +150,8 @@ public class BeerDroid extends Activity {
 	 */
 	@Override
 	public final boolean onCreateOptionsMenu(final Menu menu) {
+		MenuItem mi = menu.add(Menu.NONE, MENU_SEARCH, Menu.NONE, "Search");
+		mi.setIcon(R.drawable.ic_menu_search);
 		menu.add(Menu.NONE, MENU_PREFERENCES, Menu.NONE, "Preferences");
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -154,6 +164,10 @@ public class BeerDroid extends Activity {
 	@Override
 	public final boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
+		case MENU_SEARCH:
+			//Show the search overlay
+			onSearchRequested();
+			return true;
 		case MENU_PREFERENCES:
 			//Start the preferences activity
 			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
@@ -182,7 +196,7 @@ public class BeerDroid extends Activity {
 	 * @author malte
 	 *
 	 */
-	private class DoSearch extends AsyncTask<String, Object, String> {
+	private class DoSearch extends AsyncTask<String, Void, String> {
 
 		@Override
 		protected String doInBackground(final String... query) {

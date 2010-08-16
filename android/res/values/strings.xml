@@ -2,18 +2,29 @@
 <resources>
 	<!-- BeerDroid -->
 	<string
-		name="app_name">BeerDroid</string>
+		name="app_name"
+		>BeerDroid</string>
 	<string
-		name="beer_details_name">Beer Details</string>
+		name="beer_details_name"
+		>Beer Details</string>
 
 	<!-- BeerDetails -->
 	<string
-		name="systemet_availability_header">Systemet availability in </string>
+		name="systemet_availability_header"
+		>Systemet availability in </string>
 
 	<!-- Preferences -->
 	<string
-		name="pref_systembolaget_county_key">pref_systembolaget_county</string>
+		name="pref_systembolaget_county_key"
+		>pref_systembolaget_county</string>
 	<string
-		name="pref_systembolaget_county_default">Östergötland</string>
+		name="pref_systembolaget_county_default"
+		>Östergötland</string>
+		
+	<!-- Search -->
+	<string
+		name="search_hint"
+		>Search beer</string>
 
 </resources>
+	
