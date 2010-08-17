@@ -130,17 +130,8 @@ public class BeerDroid extends Activity {
 			}
 		});
 		
-		// Check the intent and perform search if requested 
-		Intent intent = getIntent();
-	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	      String query = intent.getStringExtra(SearchManager.QUERY);
-	      if (query.length() != 0) {
-	    	  new DoSearch().execute(query);
-	    	  busy.show();
-	      } else {
-	    	  Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
-	      }
-	    }
+		// Perform specific actions depending on the intent
+		handleIntent(getIntent());
 	}
 
 	/**
@@ -152,7 +143,8 @@ public class BeerDroid extends Activity {
 	public final boolean onCreateOptionsMenu(final Menu menu) {
 		MenuItem mi = menu.add(Menu.NONE, MENU_SEARCH, Menu.NONE, "Search");
 		mi.setIcon(R.drawable.ic_menu_search);
-		menu.add(Menu.NONE, MENU_PREFERENCES, Menu.NONE, "Preferences");
+		mi = menu.add(Menu.NONE, MENU_PREFERENCES, Menu.NONE, "Preferences");
+		mi.setIcon(R.drawable.ic_menu_preferences);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -176,6 +168,16 @@ public class BeerDroid extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	/**
+	 * Called whenever the activity's intent changes
+	 * @param intent the new intent
+	 */
+	@Override
+	protected void onNewIntent(Intent intent) {
+	    setIntent(intent);
+	    handleIntent(intent);
 	}
 
 	/**
@@ -325,5 +327,23 @@ public class BeerDroid extends Activity {
 		dBHelper.close();
 
 		super.onDestroy();
+	}
+	
+	/**
+	 * Handles the start of the activity with a specific intent or
+	 * when change of intent occurs
+	 * @param intent the intent to handle
+	 */
+	private void handleIntent(Intent intent) {
+		//Check the intent and perform search if requested 
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	      String query = intent.getStringExtra(SearchManager.QUERY);
+	      if (query.length() != 0) {
+	    	  new DoSearch().execute(query);
+	    	  busy.show();
+	      } else {
+	    	  Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
+	      }
+	    }
 	}
 }
