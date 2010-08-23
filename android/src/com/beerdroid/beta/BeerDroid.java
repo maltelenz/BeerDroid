@@ -11,6 +11,9 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -24,10 +27,12 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +134,7 @@ public class BeerDroid extends Activity {
 				showResultDetails(id);
 			}
 		});
-		
+
 		// Perform specific actions depending on the intent
 		handleIntent(getIntent());
 	}
@@ -141,11 +146,9 @@ public class BeerDroid extends Activity {
 	 */
 	@Override
 	public final boolean onCreateOptionsMenu(final Menu menu) {
-		MenuItem mi = menu.add(Menu.NONE, MENU_SEARCH, Menu.NONE, "Search");
-		mi.setIcon(R.drawable.ic_menu_search);
-		mi = menu.add(Menu.NONE, MENU_PREFERENCES, Menu.NONE, "Preferences");
-		mi.setIcon(R.drawable.ic_menu_preferences);
-		return super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.default_menu, menu);
+		return true;
 	}
 
 	/**
@@ -156,11 +159,11 @@ public class BeerDroid extends Activity {
 	@Override
 	public final boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_SEARCH:
+		case R.id.search:
 			//Show the search overlay
 			onSearchRequested();
 			return true;
-		case MENU_PREFERENCES:
+		case R.id.preferences:
 			//Start the preferences activity
 			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
 			startActivity(settingsActivity);
@@ -211,8 +214,14 @@ public class BeerDroid extends Activity {
 
 			String url = Config.baseUrl + Config.superSearchUrl + URLEncoder.encode(query[0]) + "/" + county;
 			final ResponseHandler<String> responseHandler = new BasicResponseHandler();
-			final HttpClient client = new DefaultHttpClient();
+			HttpParams params = new BasicHttpParams();
+			int timeoutConnection = 5000;
+			HttpConnectionParams.setConnectionTimeout(params, timeoutConnection); 
+			int timeoutSocket = 10000;
+			HttpConnectionParams.setSoTimeout(params, timeoutSocket);
+			final HttpClient client = new DefaultHttpClient(params);
 			final HttpGet get = new HttpGet(url);
+			
 			Log.d(TAG, "Fetching url: " + get.getURI().toString());
 			String searchResults = null;
 			//call server
@@ -220,11 +229,15 @@ public class BeerDroid extends Activity {
 				searchResults = client.execute(get, responseHandler);
 			} catch (ClientProtocolException e) {
 				Log.e(TAG, "ClientProtocolException while searching: " + e.toString());
+				searchResults = null;
 			} catch (IOException e) {
 				Log.e(TAG, "IOException while searching: " + e.toString());
+				searchResults = null;
 			} catch (java.lang.IllegalArgumentException e) {
 				Log.e(TAG, "IllegalArgumentException while searching: " + e.toString());
+				searchResults = null;
 			}
+			Log.d(TAG, "Fetching of \"" + get.getURI().toString() + "\" complete");
 			return searchResults;
 		}
 
@@ -328,22 +341,29 @@ public class BeerDroid extends Activity {
 
 		super.onDestroy();
 	}
-	
+
 	/**
 	 * Handles the start of the activity with a specific intent or
-	 * when change of intent occurs
+	 * when change of intent occurs.
 	 * @param intent the intent to handle
 	 */
-	private void handleIntent(Intent intent) {
-		//Check the intent and perform search if requested 
+	private void handleIntent(final Intent intent) {
+		// Check the intent and perform search if requested
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	      String query = intent.getStringExtra(SearchManager.QUERY);
-	      if (query.length() != 0) {
-	    	  new DoSearch().execute(query);
-	    	  busy.show();
-	      } else {
-	    	  Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
-	      }
+	    	Log.d(TAG, "Launching search");
+	    	String query = intent.getStringExtra(SearchManager.QUERY);
+	    	if (query.length() != 0) {
+	    		// Store the query
+	    		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+	    				BeerDroidSearchSuggestionProvider.AUTHORITY, BeerDroidSearchSuggestionProvider.MODE);
+	    		suggestions.saveRecentQuery(query, null);
+	    		// Perform the search
+	    		new DoSearch().execute(query);
+	    		busy.show();
+	    	} else {
+	    		Toast.makeText(getBaseContext(), "Please enter a name to search for.",
+	    				Toast.LENGTH_LONG).show();
+	    	}
 	    }
 	}
 }

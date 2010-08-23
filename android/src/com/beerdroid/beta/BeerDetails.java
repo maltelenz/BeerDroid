@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -103,4 +106,39 @@ public class BeerDetails extends Activity {
 
 		super.onCreate(savedInstanceState);
 	}
+	
+	/**
+	 * Creates the menu called by the menu button.
+	 * @param menu the menu to modify
+	 * @return the menu
+	 */
+	@Override
+	public final boolean onCreateOptionsMenu(final Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.default_menu, menu);
+		return true;
+	}
+
+	/**
+	 * Called when the user has pressed a menu item.
+	 * @param item the clicked item
+	 * @return if the click was handled
+	 */
+	@Override
+	public final boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.search:
+			//Show the search overlay
+			onSearchRequested();
+			return true;
+		case R.id.preferences:
+			//Start the preferences activity
+			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
+			startActivity(settingsActivity);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+		
 }

@@ -13,6 +13,14 @@
 		name="systemet_availability_header"
 		>Systemet availability in </string>
 
+	<!--  Menus -->
+	<string
+		name="menu_search"
+		>Search</string>
+	<string
+		name="menu_preferences"
+		>Preferences</string>
+
 	<!-- Preferences -->
 	<string
 		name="pref_systembolaget_county_key"
