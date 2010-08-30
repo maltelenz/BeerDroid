@@ -10,4 +10,7 @@
 		android:summary="For availability searches"
 		android:defaultValue="@string/pref_systembolaget_county_default" />
 
+
+
+<Preference android:title="Clear search cache" android:summary="Removes all locally stored searches"></Preference>
 </PreferenceScreen>

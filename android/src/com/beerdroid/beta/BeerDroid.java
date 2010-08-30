@@ -60,13 +60,22 @@ public class BeerDroid extends Activity {
 	private static final int MENU_PREFERENCES = 1;
 
 	/** Contains the list of beers from the last search. */
-	public static ArrayList<Beer> resultList;
+	private static ArrayList<Beer> resultList;
 	private EditText searchField;
 	private ProgressDialog busy;
 	private ListView resultView;
 	private DatabaseAdapter dBHelper;
 	private Resources res;
 	private String county;
+	
+	/**
+	 * @author Erik Cederber
+	 * @param id Beer id in the result list
+	 * @return the Beer att position id in the result list, or null
+	 */
+	public static Beer getBeer(final int id) {
+		return resultList.get(id);
+	}
 
 	/**
 	 *  Called when the activity is first created.
@@ -90,6 +99,7 @@ public class BeerDroid extends Activity {
 		busy.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		busy.setMessage("Contacting server...");
 		busy.setCancelable(false);
+		
 
 		//make search button clickable
 		final Button searchButton = (Button) findViewById(R.id.search_button);
@@ -125,18 +135,33 @@ public class BeerDroid extends Activity {
 				}
 			}
 		});
+		searchField.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(final View view) {
+				onSearchRequested();
+			}
+		});
 
 		//set up the resultView
 		resultView = (ListView) findViewById(R.id.result_list);
 		resultView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(final AdapterView<?> parent, final View v, final int position, final long id) {
+			public void onItemClick(final AdapterView<?> parent, 
+                                      final View v,
+                                      final int position, final long id) {
 				showResultDetails(id);
 			}
 		});
 
-		// Perform specific actions depending on the intent
-		handleIntent(getIntent());
+		// Handle the intent, unless there has been a configuration change and there
+		// already is stored data available
+		resultList = (ArrayList<Beer>) getLastNonConfigurationInstance();
+		if (resultList == null) {
+			handleIntent(getIntent());
+		} else {
+			final ResultAdapter resultAdapter = new ResultAdapter(this, R.layout.result_list_item, resultList);
+			resultView.setAdapter(resultAdapter);
+		}
 	}
 
 	/**
@@ -149,6 +174,16 @@ public class BeerDroid extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.default_menu, menu);
 		return true;
+	}
+	
+	/**
+	 * Called whenever the activity's intent changes
+	 * @param intent the new intent
+	 */
+	@Override
+	protected void onNewIntent(Intent intent) {
+	    setIntent(intent);
+	    handleIntent(intent);
 	}
 
 	/**
@@ -174,15 +209,21 @@ public class BeerDroid extends Activity {
 	}
 	
 	/**
-	 * Called whenever the activity's intent changes
-	 * @param intent the new intent
+	 * Called when a configuration change occurs, e.g.
+	 * activating hardware keyboard or rotating the phone
+	 * Stores the result list (if there is any) to avoid reload
 	 */
 	@Override
-	protected void onNewIntent(Intent intent) {
-	    setIntent(intent);
-	    handleIntent(intent);
+	public Object onRetainNonConfigurationInstance() {
+		ArrayList<Beer> data;
+		if (resultList.size() > 0) {
+			data = resultList;
+		} else {
+			data = null;
+		}
+	    return data;
 	}
-
+	
 	/**
 	 * Show a detailed view with all info on a search result.
 	 * @param id which beer to show details for.

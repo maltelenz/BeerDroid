@@ -31,7 +31,7 @@ public class BeerDetails extends Activity {
 		//fetch the beer object
 		final Bundle extras = getIntent().getExtras();
 		final Long id = extras.getLong("id");
-		beer = BeerDroid.resultList.get(id.intValue());
+		beer = BeerDroid.getBeer(id.intValue());
 
 		setContentView(R.layout.beer_details);
 
