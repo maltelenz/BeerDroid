@@ -4,3 +4,4 @@ rails/log/
 android/bin/
 android/gen/
 android/src/com/beerdroid/beta/Config.java
+.checkstyle
