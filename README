@@ -13,3 +13,21 @@ Getting started
 * Get this source from github
 * Remove the .template from android/src/com/beerdroid/beta/Config.java.template
   and change any needed options.
+
+Rails paths and functionality
+=============================
+
+The links from paths to controllers are in /rails/config/routes.rb
+The implementation and detailed description of return format is in /rails/app/controllers/home_controller.rb
+
+The following paths are implemented in rails:
+
+Path => returns
+find_ba_id_google/:query/:nr => :nr beeradvocate ids for the search term :query
+get_ba_by_name/:query => beeradvocate information for the search term :query. Only first hit.
+get_ba_by_id/:brewery/:id.:format => beeradvocate information for the given beeradvocate ids in :format
+get_systemet_by_name/:query => systembolaget information for the given search term
+get_systemet_by_name/:query/:county => systembolaget information for the given search term in county
+supersearch/:query => All info available for all beers found with :query
+supersearch/:query/:county => All info available for all beers found with :query, with systembolaget info for :county
+get_ba_brewery_by_id/:brewery => beeradvocate brewery info for the :brewery id on beeradvocate
