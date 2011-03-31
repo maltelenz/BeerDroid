@@ -25,14 +25,62 @@
 	<string
 		name="pref_systembolaget_county_key"
 		>pref_systembolaget_county</string>
-	<string
+	<string 
 		name="pref_systembolaget_county_default"
 		>Östergötland</string>
+	<!--  Systembolaget county options -->
+	<string-array name="pref_systembolaget_options">
+		<item>Blekinge</item>
+		<item>Dalarna</item>
+		<item>Gotland</item>
+		<item>Gävleborg</item>
+		<item>Halland</item>
+		<item>Jämtland</item>
+		<item>Jönköping</item>
+		<item>Kalmar</item>
+		<item>Kronoberg</item>
+		<item>Norrbotten</item>
+		<item>Skåne</item>
+		<item>Stockholm</item>
+		<item>Södermanland</item>
+		<item>Uppsala</item>
+		<item>Värmland</item>
+		<item>Västerbotten</item>
+		<item>Västernorrland</item>
+		<item>Västmanland</item>
+		<item>Västra Götaland</item>
+		<item>Örebro</item>
+		<item>Östergötland</item>
+	</string-array>
+	<!--   Systembolaget county option values -->
+	<string-array name="pref_systembolaget_values">
+		<item>Blekinge</item>
+		<item>Dalarna</item>
+		<item>Gotland</item>
+		<item>Gavleborg</item>
+		<item>Halland</item>
+		<item>Jamtland</item>
+		<item>Jonkoping</item>
+		<item>Kalmar</item>
+		<item>Kronoberg</item>
+		<item>Norrbotten</item>
+		<item>Skane</item>
+		<item>Stockholm</item>
+		<item>Sodermanland</item>
+		<item>Uppsala</item>
+		<item>Varmland</item>
+		<item>Vasterbotten</item>
+		<item>Vasternorrland</item>
+		<item>Vastmanland</item>
+		<item>Vastra_Gotaland</item>
+		<item>Orebro</item>
+		<item>Ostergotland</item>
+	</string-array>
 		
 	<!-- Search -->
 	<string
 		name="search_hint"
 		>Search beer</string>
-
+	<string name="pref_clear_key">pref_clear</string>
 </resources>
 	

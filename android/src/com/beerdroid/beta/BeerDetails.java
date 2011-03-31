@@ -5,8 +5,10 @@ import java.util.Hashtable;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,16 +25,25 @@ import android.widget.TextView;
  *
  */
 public class BeerDetails extends Activity {
-
+	private static final String TAG = "BeerDetails";
 	private Beer beer;
-
+	
 	@Override
 	protected final void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		Intent intent = getIntent();
 		//fetch the beer object
-		final Bundle extras = getIntent().getExtras();
-		final Long id = extras.getLong("id");
-		beer = BeerDroid.getBeer(id.intValue());
-
+		final String beerId = intent.getStringExtra(BeerProvider.BEERADVOCATE_BEER_ID);
+		Uri beerUri = Uri.parse(BeerProvider.CONTENT_URI.toString() + "?limit=1");
+		Cursor c = managedQuery(beerUri, BeerProvider.ALL_BEER_COLUMNS, BeerProvider.BEERADVOCATE_BEER_ID + " = ?", new String[] {beerId}, null);
+		if (!c.moveToFirst()) {
+			Log.e(TAG, "No data available in cursor");
+		} else {
+			beer = new Beer(c);
+		}
+		c.close();
+		
 		setContentView(R.layout.beer_details);
 
 		//populate all fields
@@ -57,7 +68,7 @@ public class BeerDetails extends Activity {
 		final TextView systemetPriceView = (TextView) findViewById(R.id.beer_details_systemet_price);
 		systemetPriceView.setText(beer.getSystemetPrice());
 
-		if (beer.systemetAvailabilityList.size() != 0) {
+		if (beer.systemetAvailabilityList != null && beer.systemetAvailabilityList.size() != 0) {
 			final LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			LinearLayout list = (LinearLayout) findViewById(R.id.beer_details_systemet_available_list);
@@ -103,8 +114,6 @@ public class BeerDetails extends Activity {
 		} else {
 			beerAdvocateButton.setEnabled(false);
 		}
-
-		super.onCreate(savedInstanceState);
 	}
 	
 	/**

@@ -3,39 +3,44 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/beer_details_scroll"
 	android:layout_width="fill_parent"
-	android:background="#CCCCCC"
 	android:layout_height="fill_parent">
 	<LinearLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/beer_details"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:background="#CCCCCC"
 		android:orientation="vertical">
 
 		<TextView
 			style="@style/Header"
-			android:text="Name:" />
+			android:text="Name:"
+			android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" />
 
 		<TextView
 			android:id="@+id/beer_details_name"
-			style="@style/Data" />
+			android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" />
 
 		<TextView
 			android:text="Brewery:"
-			style="@style/Header" />
+			android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" />
 
 		<TextView
 			android:id="@+id/beer_details_brewery"
-			style="@style/Data" />
+			android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" />
 
 		<TextView
 			android:text="Style:"
-			style="@style/Header" />
+			android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" />
 
 		<TextView
 			android:id="@+id/beer_details_style"
-			style="@style/Data" />
+			android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" />
 
 		<LinearLayout
 			xmlns:android="http://schemas.android.com/apk/res/android"
@@ -94,8 +99,6 @@
 			android:id="@+id/beer_details_systemet_available_list"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:background="#CCCCCC"
-			android:cacheColorHint="#00000000"
 			android:orientation="vertical" />
 
 		<Button

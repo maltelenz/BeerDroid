@@ -5,15 +5,14 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:background="#E7E3E7"
 		android:padding="5dp">
-
 		<EditText
 			android:id="@+id/search_field"
+			style="Widget.EditText"
+			android:hint="Search"
 			android:layout_width="0dp"
 			android:layout_weight="9"
 			android:layout_height="fill_parent"
@@ -21,7 +20,8 @@
 			android:singleLine="true"
 			android:inputType="textFilter" 
 			android:imeOptions="actionSearch"
-			android:focusableInTouchMode="False" />
+			android:focusable="false"
+			android:focusableInTouchMode="false"/>
 		<Button
 			android:id="@+id/search_button"
 			android:layout_width="wrap_content"
@@ -32,7 +32,5 @@
 	<ListView
 		android:id="@+id/result_list"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:background="#E7E3E7"
-		android:cacheColorHint="#E7E3E7" />
+		android:layout_height="fill_parent" />
 </LinearLayout>

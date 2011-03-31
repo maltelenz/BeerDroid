@@ -2,15 +2,28 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<EditTextPreference
-		android:dialogTitle="Edit county (län)"
-		android:dialogMessage="for systembolaget searches"
+<!-- android:dialogMessage="for Systembolaget searches"  -->
+	<ListPreference
 		android:key="@string/pref_systembolaget_county_key"
 		android:title="Systembolaget county (län)"
+		android:dialogTitle="Select county (län)"
 		android:summary="For availability searches"
-		android:defaultValue="@string/pref_systembolaget_county_default" />
+		android:entries="@array/pref_systembolaget_options"
+		android:entryValues="@array/pref_systembolaget_values"
+		android:defaultValue="@string/pref_systembolaget_county_default"/>
 
 
+	<!-- <ListPreference
+		android:key="pref_theme"  
+		android:title="Theme"
+		android:summary="Switch theme"
+		android:entries="@array/pref_theme_options" 
+		android:entryValues="@array/pref_theme_values"
+		android:dialogTitle="Theme" />  -->
+		
+	<Preference 
+		android:title="Clear search cache" 
+		android:summary="Removes all locally stored searches" 
+		android:key="@string/pref_clear_key" />
 
-<Preference android:title="Clear search cache" android:summary="Removes all locally stored searches"></Preference>
 </PreferenceScreen>

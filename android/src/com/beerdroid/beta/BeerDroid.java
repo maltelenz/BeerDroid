@@ -20,6 +20,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,9 +28,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.SearchRecentSuggestions;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,60 +36,46 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * Main activity which is shown when started.
- * @author Malte Lenz
+ * @author Malte Lenz, Erik Cederberg
  *
  */
 public class BeerDroid extends Activity {
 
-	private static final String TAG = "BeerDroid"; //Application name for logging
-	private static final int MENU_SEARCH = 0;
-	private static final int MENU_PREFERENCES = 1;
+	private static final String TAG = "BeerDroid"; //Application name for logging;
 
 	/** Contains the list of beers from the last search. */
-	private static ArrayList<Beer> resultList;
+	private ArrayList<Beer> resultList;
 	private EditText searchField;
 	private ProgressDialog busy;
 	private ListView resultView;
-	private DatabaseAdapter dBHelper;
+	//private DatabaseAdapter dBHelper;
 	private Resources res;
 	private String county;
 	
-	/**
-	 * @author Erik Cederber
-	 * @param id Beer id in the result list
-	 * @return the Beer att position id in the result list, or null
-	 */
-	public static Beer getBeer(final int id) {
-		return resultList.get(id);
-	}
-
 	/**
 	 *  Called when the activity is first created.
 	 *  @param savedInstanceState state from last time, unused by us.
 	 *  */
 	@Override
-	public final void onCreate(final Bundle savedInstanceState) {
+	protected final void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		res = getResources();
 
 		//connect to database
-		dBHelper = new DatabaseAdapter(this);
-		dBHelper.open();
+		//dBHelper = new DatabaseAdapter(this);
+		//dBHelper.open();
 
 		searchField = (EditText) findViewById(R.id.search_field);
 
@@ -100,41 +85,6 @@ public class BeerDroid extends Activity {
 		busy.setMessage("Contacting server...");
 		busy.setCancelable(false);
 		
-
-		//make search button clickable
-		final Button searchButton = (Button) findViewById(R.id.search_button);
-		searchButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(final View v) {
-				//fetch the entered search query
-				final String query = searchField.getText().toString();
-				if (query.length() != 0) {
-					new DoSearch().execute(query);
-					busy.show();
-				} else {
-					Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
-				}
-			}
-		});
-
-		//search when the search button is pressed
-		searchField.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_SEARCH || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-					final String query = searchField.getText().toString();
-					if (query.length() != 0) {
-						new DoSearch().execute(query);
-						busy.show();
-					} else {
-						Toast.makeText(getBaseContext(), "Please enter a name to search for.", Toast.LENGTH_LONG).show();
-					}
-					return true;
-				} else {
-					return false;
-				}
-			}
-		});
 		searchField.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View view) {
@@ -147,11 +97,12 @@ public class BeerDroid extends Activity {
 		resultView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(final AdapterView<?> parent, 
-                                      final View v,
-                                      final int position, final long id) {
-				showResultDetails(id);
+					final View v, final int position, final long id) {
+				Beer b = (Beer) ((AdapterView<?>) parent).getItemAtPosition(position);
+				showResultDetails(b);
 			}
 		});
+		resultView.requestFocus();
 
 		// Handle the intent, unless there has been a configuration change and there
 		// already is stored data available
@@ -164,6 +115,17 @@ public class BeerDroid extends Activity {
 		}
 	}
 
+	@Override
+	protected final void onDestroy() {
+		//dismiss dialog
+		busy.dismiss();
+		//close database connection	
+		//dBHelper.close();
+
+		super.onDestroy();
+	}
+
+	
 	/**
 	 * Creates the menu called by the menu button.
 	 * @param menu the menu to modify
@@ -212,6 +174,7 @@ public class BeerDroid extends Activity {
 	 * Called when a configuration change occurs, e.g.
 	 * activating hardware keyboard or rotating the phone
 	 * Stores the result list (if there is any) to avoid reload
+	 * @return the data that is to be stored, or null
 	 */
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -228,10 +191,10 @@ public class BeerDroid extends Activity {
 	 * Show a detailed view with all info on a search result.
 	 * @param id which beer to show details for.
 	 */
-	protected final void showResultDetails(final Long id) {
-		Log.d(TAG, "showResultDetails for beer: " + resultList.get(id.intValue()).toString());
+	protected final void showResultDetails(final Beer b) {
+		Log.d(TAG, "showResultDetails for beer: " + b.name);
 		final Intent showDetailIntent = new Intent(this, BeerDetails.class);
-		showDetailIntent.putExtra("id", id);
+		showDetailIntent.putExtra(BeerProvider.BEERADVOCATE_BEER_ID, b.getBaBeer().toString());
 		startActivity(showDetailIntent);
 	}
 
@@ -253,12 +216,12 @@ public class BeerDroid extends Activity {
 					res.getString(R.string.pref_systembolaget_county_default) //or default if none is set
 			);
 
-			String url = Config.baseUrl + Config.superSearchUrl + URLEncoder.encode(query[0]) + "/" + county;
+			String url = Config.baseUrl + Config.superSearchUrl + URLEncoder.encode(query[0]);
 			final ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			HttpParams params = new BasicHttpParams();
-			int timeoutConnection = 5000;
+			int timeoutConnection = 7500;
 			HttpConnectionParams.setConnectionTimeout(params, timeoutConnection); 
-			int timeoutSocket = 10000;
+			int timeoutSocket = 15000;
 			HttpConnectionParams.setSoTimeout(params, timeoutSocket);
 			final HttpClient client = new DefaultHttpClient(params);
 			final HttpGet get = new HttpGet(url);
@@ -313,7 +276,19 @@ public class BeerDroid extends Activity {
 			}
 
 			for (int i = 0; i < jsonResults.length(); i = i + 1) {
-				resultList.add(new Beer(jsonResults.getJSONObject(i), dBHelper, county));
+				Beer b = new Beer(jsonResults.getJSONObject(i), county);
+				resultList.add(b);
+				ContentValues values = new ContentValues();
+				values.put(BeerProvider.NAME, b.getName());
+				values.put(BeerProvider.BREWERY, b.getBreweryName());
+				values.put(BeerProvider.STYLE, b.getStyle());
+				values.put(BeerProvider.SYSTEMBOLAGET_PRICE, "0");
+				values.put(BeerProvider.SYSTEMBOLAGET_SIZE, "0");
+				values.put(BeerProvider.ABV, b.getAbv());
+				values.put(BeerProvider.BEERADVOCATE_BEER_ID, b.getBaBeer());
+				values.put(BeerProvider.BEERADVOCATE_BREWERY_ID, b.getBaBrewery());
+				values.put(BeerProvider.BEERADVOCATE_RATING, b.getBaBrewery());
+				getContentResolver().insert(BeerProvider.CONTENT_URI, values);
 			}
 		} catch (JSONException e) {
 			Log.e(TAG, "Could not decode results: " + e.toString());
@@ -322,6 +297,8 @@ public class BeerDroid extends Activity {
 		Log.d(TAG, "Final list of search results: " + resultList.toString());
 
 		final ResultAdapter resultAdapter = new ResultAdapter(this, R.layout.result_list_item, resultList);
+		TextView tv = new TextView(this);
+	    tv.setText("HeaderView");
 		resultView.setAdapter(resultAdapter);
 	}
 
@@ -372,17 +349,7 @@ public class BeerDroid extends Activity {
 		}
 
 	}
-
-	@Override
-	protected final void onDestroy() {
-		//dismiss dialog
-		busy.dismiss();
-		//close database connection
-		dBHelper.close();
-
-		super.onDestroy();
-	}
-
+	
 	/**
 	 * Handles the start of the activity with a specific intent or
 	 * when change of intent occurs.
@@ -390,14 +357,11 @@ public class BeerDroid extends Activity {
 	 */
 	private void handleIntent(final Intent intent) {
 		// Check the intent and perform search if requested
-	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+		String action = intent.getAction();
+	    if (action.equals(Intent.ACTION_SEARCH)) {
 	    	Log.d(TAG, "Launching search");
 	    	String query = intent.getStringExtra(SearchManager.QUERY);
 	    	if (query.length() != 0) {
-	    		// Store the query
-	    		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-	    				BeerDroidSearchSuggestionProvider.AUTHORITY, BeerDroidSearchSuggestionProvider.MODE);
-	    		suggestions.saveRecentQuery(query, null);
 	    		// Perform the search
 	    		new DoSearch().execute(query);
 	    		busy.show();
@@ -405,6 +369,11 @@ public class BeerDroid extends Activity {
 	    		Toast.makeText(getBaseContext(), "Please enter a name to search for.",
 	    				Toast.LENGTH_LONG).show();
 	    	}
+	    } else if (action.equals(Intent.ACTION_VIEW)) {
+	    	Log.d(TAG, "Launching BeerDetails from ACTION_VIEW");
+	    	final Intent showDetailIntent = new Intent(this, BeerDetails.class);
+			showDetailIntent.putExtra(BeerProvider.BEERADVOCATE_BEER_ID, intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+			startActivity(showDetailIntent);
 	    }
 	}
 }

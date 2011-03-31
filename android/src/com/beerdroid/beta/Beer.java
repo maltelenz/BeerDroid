@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.Cursor;
 import android.util.Log;
 
 /**
@@ -73,7 +74,7 @@ public class Beer {
 	 * @param dBHelper	DatabaseAdapter for database connection
 	 * @param newCounty county for which systemet availability is fetched
 	 */
-	public Beer(final JSONObject json, final DatabaseAdapter dBHelper, final String newCounty) {
+	public Beer(final JSONObject json, final String newCounty) {
 		//initialize the availability list
 		systemetAvailabilityList = new ArrayList<Hashtable<String, String>>();
 		//save the county
@@ -144,17 +145,39 @@ public class Beer {
 		} catch (JSONException e) {
 			Log.d(TAG, "No availability found: " + e.toString());
 		}
-
-		//beer is fully initialized, save it to database if not already there
-		if (!dBHelper.beerExists(this)) {
-			//save beer
-			dBHelper.createBeer(this);
-		}
-		// TODO else {
-		//	dBHelper.updateBeer(this);
-		//}
 	}
 
+
+	/**
+	 * Create the beer object a database cursor
+	 * @param cursor A database cursor set to the relevant index
+	 */
+	public Beer(Cursor cursor) throws IllegalArgumentException {
+		name = cursor.getString(cursor.getColumnIndexOrThrow(BeerProvider.NAME));
+		breweryName = cursor.getString(cursor.getColumnIndexOrThrow(BeerProvider.BREWERY));
+		// Style
+		int idx = cursor.getColumnIndex(BeerProvider.STYLE);
+		style = (idx != -1) ? cursor.getString(idx) : "";
+		// ABV
+		idx = cursor.getColumnIndex(BeerProvider.ABV);
+		abv = (idx != -1) ? cursor.getDouble(idx) : 0;
+		// BeerAdvocate id
+		idx = cursor.getColumnIndex(BeerProvider.BEERADVOCATE_BEER_ID);
+		baBeer = (idx != -1) ? cursor.getInt(idx) : 0;
+		// BeerAdvocate rating
+		idx = cursor.getColumnIndex(BeerProvider.BEERADVOCATE_RATING);
+		baRating = (idx != -1) ? cursor.getString(idx) : "";
+		// BeerAdvocate brewery id
+		idx = cursor.getColumnIndex(BeerProvider.BEERADVOCATE_BREWERY_ID);
+		baBrewery = (idx != -1) ? cursor.getInt(idx) : 0;
+		// Systembolaget size
+		idx = cursor.getColumnIndex(BeerProvider.SYSTEMBOLAGET_SIZE);
+		systemetSize = (idx != -1) ? cursor.getInt(idx) : 0;
+		// Systembolaget price
+		idx = cursor.getColumnIndex(BeerProvider.SYSTEMBOLAGET_PRICE);
+		systemetPrice = (idx != -1) ? cursor.getInt(idx) : 0;	
+	}
+	
 	/**
 	 * Methods for getting and setting all the fields,
 	 * with defaults for when fields are null

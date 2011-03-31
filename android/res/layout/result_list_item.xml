@@ -11,9 +11,8 @@
 
 	<TextView
 		android:id="@+id/beer_name"
+		style="@android:style/TextAppearance.Medium"
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:textColor="#000000"
-		android:textSize="18dp" 
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content" />
 
@@ -24,15 +23,14 @@
 		android:orientation="horizontal">
 		<TextView
 			android:id="@+id/beer_brewery"
+			android:textAppearance = "?android:attr/textAppearanceSmall"
 			xmlns:android="http://schemas.android.com/apk/res/android"
-			android:textColor="#000000"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:paddingRight="10dp" />
 		<TextView
 			android:id="@+id/beer_rating"
 			xmlns:android="http://schemas.android.com/apk/res/android"
-			android:textColor="#000000"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
 	</LinearLayout>
