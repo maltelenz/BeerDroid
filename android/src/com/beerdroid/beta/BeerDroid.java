@@ -179,7 +179,7 @@ public class BeerDroid extends Activity {
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		ArrayList<Beer> data;
-		if (resultList.size() > 0) {
+		if (resultList != null && resultList.size() > 0) {
 			data = resultList;
 		} else {
 			data = null;
@@ -274,22 +274,24 @@ public class BeerDroid extends Activity {
 			if (jsonResults.length() == 0) {
 				Toast.makeText(getBaseContext(), "No beers found", Toast.LENGTH_LONG).show();
 			}
-
+			
+			ContentValues values[] = new ContentValues[jsonResults.length()];
 			for (int i = 0; i < jsonResults.length(); i = i + 1) {
 				Beer b = new Beer(jsonResults.getJSONObject(i), county);
 				resultList.add(b);
-				ContentValues values = new ContentValues();
-				values.put(BeerProvider.NAME, b.getName());
-				values.put(BeerProvider.BREWERY, b.getBreweryName());
-				values.put(BeerProvider.STYLE, b.getStyle());
-				values.put(BeerProvider.SYSTEMBOLAGET_PRICE, "0");
-				values.put(BeerProvider.SYSTEMBOLAGET_SIZE, "0");
-				values.put(BeerProvider.ABV, b.getAbv());
-				values.put(BeerProvider.BEERADVOCATE_BEER_ID, b.getBaBeer());
-				values.put(BeerProvider.BEERADVOCATE_BREWERY_ID, b.getBaBrewery());
-				values.put(BeerProvider.BEERADVOCATE_RATING, b.getBaBrewery());
-				getContentResolver().insert(BeerProvider.CONTENT_URI, values);
+				ContentValues cv = new ContentValues();
+				cv.put(BeerProvider.NAME, b.getName());
+				cv.put(BeerProvider.BREWERY, b.getBreweryName());
+				cv.put(BeerProvider.STYLE, b.getStyle());
+				cv.put(BeerProvider.SYSTEMBOLAGET_PRICE, "0");
+				cv.put(BeerProvider.SYSTEMBOLAGET_SIZE, "0");
+				cv.put(BeerProvider.ABV, b.getAbv());
+				cv.put(BeerProvider.BEERADVOCATE_BEER_ID, b.getBaBeer());
+				cv.put(BeerProvider.BEERADVOCATE_BREWERY_ID, b.getBaBrewery());
+				cv.put(BeerProvider.BEERADVOCATE_RATING, b.getBaBrewery());
+				values[i] = cv;
 			}
+			getContentResolver().bulkInsert(BeerProvider.CONTENT_URI, values);
 		} catch (JSONException e) {
 			Log.e(TAG, "Could not decode results: " + e.toString());
 		}

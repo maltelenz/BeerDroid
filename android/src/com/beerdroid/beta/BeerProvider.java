@@ -44,6 +44,11 @@ public class BeerProvider extends ContentProvider {
 	public static final String[] ALL_BEER_COLUMNS = {_ID, NAME, BREWERY, STYLE, ABV, BEERADVOCATE_RATING,
 		BEERADVOCATE_BEER_ID, BEERADVOCATE_BREWERY_ID, SYSTEMBOLAGET_SIZE, SYSTEMBOLAGET_PRICE};
 	
+	// Used selections
+	private static final String QUERY_ID =  _ID + " = ?";
+	private static final String QUERY_BA_ID = BEERADVOCATE_BEER_ID + " = ?";
+	private static final String QUERY_SEARCH_SUGGEST = NAME + " LIKE ? OR " + NAME + " LIKE ?";
+	
 	//query for creating the beer table
 	private static final String CREATE_TABLE_BEER =
 		"CREATE TABLE " + BEER_TABLE_NAME + "("
@@ -95,10 +100,12 @@ public class BeerProvider extends ContentProvider {
 	private static final int BEER = 1;
     private static final int COUNT = 2;
     private static final int SEARCH_SUGGEST = 3;
+    private static final int CLEAR_DATABASE = 4;
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static {
     	sUriMatcher.addURI(AUTHORITY, "beer", BEER);
     	sUriMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
+    	sUriMatcher.addURI(AUTHORITY, "clear_database", CLEAR_DATABASE);
     	sQSBProjectionMap.put(_ID, _ID + " AS " + BaseColumns._ID);
     	sQSBProjectionMap.put(NAME, NAME + " AS " +	SearchManager.SUGGEST_COLUMN_TEXT_1);
     	sQSBProjectionMap.put(BREWERY, BREWERY + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_2);
@@ -108,7 +115,7 @@ public class BeerProvider extends ContentProvider {
     	sBeerProjectionMap.put(BREWERY, BREWERY); 
     	sBeerProjectionMap.put(STYLE, STYLE); 
     	sBeerProjectionMap.put(ABV, ABV); 
-    	sBeerProjectionMap.put(BEERADVOCATE_RATING,BEERADVOCATE_RATING); 
+    	sBeerProjectionMap.put(BEERADVOCATE_RATING, BEERADVOCATE_RATING); 
     	sBeerProjectionMap.put(BEERADVOCATE_BEER_ID, BEERADVOCATE_BEER_ID); 
     	sBeerProjectionMap.put(BEERADVOCATE_BREWERY_ID, BEERADVOCATE_BREWERY_ID);
     	sBeerProjectionMap.put(SYSTEMBOLAGET_SIZE, SYSTEMBOLAGET_SIZE);
@@ -116,18 +123,29 @@ public class BeerProvider extends ContentProvider {
     }
 	
 	@Override
-	public boolean onCreate() {
+	public final boolean onCreate() {
 		mDbHelper = new DatabaseHelper(getContext());
 		return true;	
 	}
 
 	@Override	
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		throw new UnsupportedOperationException();
+	public final int delete(Uri uri, String selection, String[] selectionArgs) {
+		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+		switch (sUriMatcher.match(uri)) {
+		case BEER:
+			break;
+		case CLEAR_DATABASE:
+			selection = "1";
+			selectionArgs = null;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " +  uri);
+		}
+		return db.delete(BEER_TABLE_NAME, selection, selectionArgs);
 	}
 
 	@Override
-	public String getType(Uri uri) {
+	public final String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
 		case BEER:
 			return BEER_MIME_TYPE;
@@ -138,41 +156,43 @@ public class BeerProvider extends ContentProvider {
 		}	
 	}
 	
-//	@Override
-//	public int bulkInsert(Uri uri, ContentValues[] values) {
-//		SQLiteDatabase db = mDbHelper.getWritableDatabase();
-//		for (int i = 0; i < values.length; ++i) {
-//			// Extract and validate
-//			ContentValues row = values[i];
-//			validateContentValues(row);
-//			// Check if the ID already exists, if so, update else insert
-//			Cursor c = db.query(BEER_TABLE_NAME, 
-//					new String[] {_ID}, 
-//					BEERADVOCATE_BEER_ID + " = ?", 
-//					new String[] {row.getAsString(BEERADVOCATE_BEER_ID)}, 
-//					null, null, null, "1");
-//			if (c.moveToFirst()) {
-//				String id = c.getString(0);
-//				c.close();
-//				db.update(BEER_TABLE_NAME, row, _ID + "= ?", new String[] {id});
-//				Log.d(TAG, "Beer with id " + id + " updated.");
-//			}
-//			else {
-//				c.close();
-//				long id = db.insert(BEER_TABLE_NAME, null, row);
-//				Log.d(TAG, "Beer with id " + id + " inserted.");
-//			}
-//		}
-//		return 0;
-//	}
+	@Override
+	public final int bulkInsert(Uri uri, final ContentValues[] values) {
+		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+		int numInserted = 0;
+		for (int i = 0; i < values.length; ++i) {
+			if (!validateContentValues(values[i])) {
+				continue;
+			}
+			// Check if the ID already exists, if so, update else insert
+			try {
+				long id = getBeerId(QUERY_BA_ID, new String[] {values[i].getAsString(BEERADVOCATE_BEER_ID)});
+				if (id > 0) {
+					db.update(BEER_TABLE_NAME, values[i], _ID + "= ?", new String[] {String.valueOf(id)});
+					Log.d(TAG, "Beer with id " + id + " updated.");
+					++numInserted;
+				} else if (id == -1) {					
+					id = db.insert(BEER_TABLE_NAME, null, values[i]);
+					Log.d(TAG, "Beer with id " + id + " inserted.");
+					++numInserted;
+				}
+			} catch (Exception e) {
+				Log.e(TAG, "Exception caught when inserting beer: " + e.getMessage());
+			}
+		}
+		return numInserted;
+	}
 
 	@Override
-	public Uri insert(Uri uri, ContentValues values) throws IllegalArgumentException {
+	public final Uri insert(Uri uri, ContentValues values) throws IllegalArgumentException {
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		// Verify that all required values exist
-		validateContentValues(values);
+		if (!validateContentValues(values)) {
+			throw new IllegalArgumentException("Incorrect ContentValues format");
+		}
+		long id = getBeerId(QUERY_BA_ID, new String[] {values.getAsString(BEERADVOCATE_BEER_ID)});
 		try {
-			long id = db.insert(BEER_TABLE_NAME, null, values);
+			id = db.insert(BEER_TABLE_NAME, null, values);
 			Log.d(TAG, "Beer with id " + id + " inserted.");
 			return Uri.withAppendedPath(uri, Long.toString(id));
 		} catch (Exception e) {
@@ -182,7 +202,7 @@ public class BeerProvider extends ContentProvider {
 	}
 	
 	@Override
-	public Cursor query(final Uri uri, String[] projection, String selection, String[] selectionArgs,
+	public final Cursor query(final Uri uri, String[] projection, String selection, String[] selectionArgs,
 			String sortOrder) {
 		 SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		 qb.setTables(BEER_TABLE_NAME);
@@ -190,7 +210,7 @@ public class BeerProvider extends ContentProvider {
 		case BEER:
 			if (selectionArgs == null) {
 				String id = uri.getLastPathSegment();
-				selection = _ID + " = ?";
+				selection = QUERY_ID;
 				selectionArgs = new String[] {id};
 			}
 			qb.setProjectionMap(sBeerProjectionMap);
@@ -200,15 +220,13 @@ public class BeerProvider extends ContentProvider {
 		case SEARCH_SUGGEST:
 			qb.setProjectionMap(sQSBProjectionMap);
 			projection = new String[] {_ID, NAME, BREWERY, BEERADVOCATE_BEER_ID};
-			selection = NAME + " LIKE ? OR "+ NAME + " LIKE ?";
+			selection = QUERY_SEARCH_SUGGEST;
 			selectionArgs = new String[] {selectionArgs[0] + "%", "% " + selectionArgs[0] + "%"};
 			break;
 		default:
-			throw new IllegalArgumentException("Uknown URI " +  uri);
+			throw new IllegalArgumentException("Unknown URI " +  uri);
 		}
 		
-
-		// limit = uri.getQueryParameter("limit");
 		SQLiteDatabase db = mDbHelper.getReadableDatabase();
 	    Cursor c = qb.query(db,
 	    		projection,
@@ -224,33 +242,59 @@ public class BeerProvider extends ContentProvider {
 	}
 
 	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	public final int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		throw new UnsupportedOperationException();
 	}
 	
-	public boolean validateContentValues(ContentValues values) {
+	/**
+	 * Querys for the database for the id of the matches
+	 * @param selection Selection string
+	 * @param selectionArgs[] Selection arguments  
+	 * @return id if unique match found, -1 if not found, -2 if non-unique match 
+	 */
+	private final long getBeerId(String selection, String selectionArgs[]) {
+		long id = 0;
+		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+		Cursor c = db.query(BEER_TABLE_NAME, 
+				new String[] {_ID}, 
+				selection, 
+				selectionArgs, 
+				null, null, null, "2");
+		if (!c.moveToFirst()) {
+			id = -1;
+		} else if (c.getCount() > 1) {
+			id = -2;
+		} else {
+			id = c.getLong(0);
+		}
+		c.close();
+		return id;
+	}
+	
+	private final boolean validateContentValues(ContentValues values) {
 		if (values.size() != 9) {
-			throw new IllegalArgumentException("Incorrect ContentValues format for BeerProvider");
+			Log.d(TAG, "Incorrect ContentValues format for BeerProvider");
 		} else if (!values.containsKey(NAME)) {
-			throw new IllegalArgumentException("BeerProvider.NAME key is missing.");
+			Log.d(TAG, "BeerProvider.NAME key is missing.");
 		} else if (!values.containsKey(STYLE)) {
-			throw new IllegalArgumentException("BeerProvider.STYLE key is missing.");
+			Log.d(TAG, "BeerProvider.STYLE key is missing.");
 		} else if (!values.containsKey(BEERADVOCATE_RATING)) {
-			throw new IllegalArgumentException("BeerProvider.BA_RATING key is missing.");
+			Log.d(TAG, "BeerProvider.BA_RATING key is missing.");
 		} else if (!values.containsKey(BREWERY)) {
-			throw new IllegalArgumentException("BeerProvider.BREWERY key is missing.");
+			Log.d(TAG, "BeerProvider.BREWERY key is missing.");
 		} else if (!values.containsKey(SYSTEMBOLAGET_SIZE)) {
-			throw new IllegalArgumentException("BeerProvider.SYSTEMBOLAGET_SIZE key is missing.");
+			Log.d(TAG, "BeerProvider.SYSTEMBOLAGET_SIZE key is missing.");
 		} else if (!values.containsKey(SYSTEMBOLAGET_PRICE)) {
-			throw new IllegalArgumentException("BeerProvider.SYSTEMBOLAGET_PRICE key is missing.");
+			Log.d(TAG, "BeerProvider.SYSTEMBOLAGET_PRICE key is missing.");
 		} else if (!values.containsKey(BEERADVOCATE_BREWERY_ID)) {
-			throw new IllegalArgumentException("BeerProvider.BA_BREWERY_ID key is missing.");
+			Log.d(TAG, "BeerProvider.BA_BREWERY_ID key is missing.");
 		} else if (!values.containsKey(BEERADVOCATE_BEER_ID)) {
-			throw new IllegalArgumentException("BeerProvider.BA_BEER_ID key is missing.");
+			Log.d(TAG, "BeerProvider.BA_BEER_ID key is missing.");
 		} else if (!values.containsKey(ABV)) {
-			throw new IllegalArgumentException("BeerProvider.ABV key is missing.");
+			Log.d(TAG, "BeerProvider.ABV key is missing.");
 		} else {
 			return true;
 		}
+		return false;
 	}
 }

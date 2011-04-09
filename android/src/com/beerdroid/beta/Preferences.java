@@ -1,5 +1,6 @@
 package com.beerdroid.beta;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -23,16 +24,15 @@ public class Preferences extends PreferenceActivity {
 		clearData.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				clearSearchSuggestions();
+				clearLocalDatabase();
 				return true;
 			}
 		});
 	}
 	
-	final void clearSearchSuggestions() {
-		
-		
-		Toast toast = Toast.makeText(getApplicationContext(), "Search history cleared.", Toast.LENGTH_SHORT);
+	final void clearLocalDatabase() {
+		getContentResolver().delete(Uri.parse("content://" + BeerProvider.AUTHORITY + "/clear_database"), null, null);
+		Toast toast = Toast.makeText(getApplicationContext(), "Local databased cleared.", Toast.LENGTH_SHORT);
 		toast.show();
 	}
 }

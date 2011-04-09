@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content"
+	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical"
 	android:paddingLeft="9dp"
@@ -11,26 +11,25 @@
 
 	<TextView
 		android:id="@+id/beer_name"
-		style="@android:style/TextAppearance.Medium"
+		style="@style/TextAppearance.Heading"
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
 
 	<LinearLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal">
 		<TextView
-			android:id="@+id/beer_brewery"
-			android:textAppearance = "?android:attr/textAppearanceSmall"
 			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/beer_brewery"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:paddingRight="10dp" />
 		<TextView
-			android:id="@+id/beer_rating"
 			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/beer_rating"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
 	</LinearLayout>

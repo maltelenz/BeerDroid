@@ -38,8 +38,6 @@
     <meta-data android:name="android.app.default_searchable" 
                android:value=".BeerDroid"></meta-data>
 
-		
-	<provider android:authorities="com.beerdroid.beta.BeerDroidSearchSuggestionProvider" android:name="BeerDroidSearchSuggestionProvider"></provider>
 	<provider android:name="com.beerdroid.beta.BeerProvider" android:authorities="com.beerdroid.beta.beerprovider"></provider>
 </application>
     
