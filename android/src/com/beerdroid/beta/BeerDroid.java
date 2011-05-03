@@ -106,10 +106,12 @@ public class BeerDroid extends Activity {
 
 		// Handle the intent, unless there has been a configuration change and there
 		// already is stored data available
-		resultList = (ArrayList<Beer>) getLastNonConfigurationInstance();
+		@SuppressWarnings("unchecked")
+		ArrayList<Beer> beerList = (ArrayList<Beer>) getLastNonConfigurationInstance(); 
 		if (resultList == null) {
 			handleIntent(getIntent());
 		} else {
+			resultList = beerList;
 			final ResultAdapter resultAdapter = new ResultAdapter(this, R.layout.result_list_item, resultList);
 			resultView.setAdapter(resultAdapter);
 		}
