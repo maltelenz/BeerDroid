@@ -288,7 +288,7 @@ public class BeerDroid extends Activity {
 				cv.put(BeerProvider.ABV, b.getAbv());
 				cv.put(BeerProvider.BEERADVOCATE_BEER_ID, b.getBaBeer());
 				cv.put(BeerProvider.BEERADVOCATE_BREWERY_ID, b.getBaBrewery());
-				cv.put(BeerProvider.BEERADVOCATE_RATING, b.getBaBrewery());
+				cv.put(BeerProvider.BEERADVOCATE_RATING, b.getBaRating());
 				values[i] = cv;
 			}
 			getContentResolver().bulkInsert(BeerProvider.CONTENT_URI, values);
