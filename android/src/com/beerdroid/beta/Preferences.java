@@ -1,5 +1,7 @@
 package com.beerdroid.beta;
 
+import com.beerdroid.provider.BeerProvider;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;

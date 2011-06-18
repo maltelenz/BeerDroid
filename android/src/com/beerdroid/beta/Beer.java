@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.beerdroid.provider.Beers;
+
 import android.database.Cursor;
 import android.util.Log;
 
@@ -153,28 +155,28 @@ public class Beer {
 	 * @param cursor A database cursor set to the relevant index
 	 */
 	public Beer(Cursor cursor) throws IllegalArgumentException {
-		name = cursor.getString(cursor.getColumnIndexOrThrow(BeerProvider.NAME));
-		breweryName = cursor.getString(cursor.getColumnIndexOrThrow(BeerProvider.BREWERY));
+		name = cursor.getString(cursor.getColumnIndexOrThrow(Beers.NAME));
+		breweryName = cursor.getString(cursor.getColumnIndexOrThrow(Beers.BREWERY));
 		// Style
-		int idx = cursor.getColumnIndex(BeerProvider.STYLE);
+		int idx = cursor.getColumnIndex(Beers.STYLE);
 		style = (idx != -1) ? cursor.getString(idx) : "";
 		// ABV
-		idx = cursor.getColumnIndex(BeerProvider.ABV);
+		idx = cursor.getColumnIndex(Beers.ABV);
 		abv = (idx != -1) ? cursor.getDouble(idx) : 0;
 		// BeerAdvocate id
-		idx = cursor.getColumnIndex(BeerProvider.BEERADVOCATE_BEER_ID);
+		idx = cursor.getColumnIndex(Beers.BEERADVOCATE_BEER_ID);
 		baBeer = (idx != -1) ? cursor.getInt(idx) : 0;
 		// BeerAdvocate rating
-		idx = cursor.getColumnIndex(BeerProvider.BEERADVOCATE_RATING);
+		idx = cursor.getColumnIndex(Beers.BEERADVOCATE_RATING);
 		baRating = (idx != -1) ? cursor.getString(idx) : "";
 		// BeerAdvocate brewery id
-		idx = cursor.getColumnIndex(BeerProvider.BEERADVOCATE_BREWERY_ID);
+		idx = cursor.getColumnIndex(Beers.BEERADVOCATE_BREWERY_ID);
 		baBrewery = (idx != -1) ? cursor.getInt(idx) : 0;
 		// Systembolaget size
-		idx = cursor.getColumnIndex(BeerProvider.SYSTEMBOLAGET_SIZE);
+		idx = cursor.getColumnIndex(Beers.SYSTEMBOLAGET_SIZE);
 		systemetSize = (idx != -1) ? cursor.getInt(idx) : 0;
 		// Systembolaget price
-		idx = cursor.getColumnIndex(BeerProvider.SYSTEMBOLAGET_PRICE);
+		idx = cursor.getColumnIndex(Beers.SYSTEMBOLAGET_PRICE);
 		systemetPrice = (idx != -1) ? cursor.getInt(idx) : 0;	
 	}
 	

@@ -38,10 +38,10 @@
     <meta-data android:name="android.app.default_searchable" 
                android:value=".BeerDroid"></meta-data>
 
-	<provider android:name="com.beerdroid.beta.BeerProvider" android:authorities="com.beerdroid.beta.beerprovider"></provider>
+	<provider android:name="com.beerdroid.provider.BeerProvider" android:authorities="com.beerdroid.provider.beerprovider"></provider>
 </application>
     
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8"/>
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="10"/>
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 </manifest> 

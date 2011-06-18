@@ -2,6 +2,9 @@ package com.beerdroid.beta;
 
 import java.util.Hashtable;
 
+import com.beerdroid.provider.BeerProvider;
+import com.beerdroid.provider.Beers;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,9 +37,9 @@ public class BeerDetails extends Activity {
 		
 		Intent intent = getIntent();
 		//fetch the beer object
-		final String beerId = intent.getStringExtra(BeerProvider.BEERADVOCATE_BEER_ID);
+		final String beerId = intent.getStringExtra(Beers.BEERADVOCATE_BEER_ID);
 		Uri beerUri = Uri.parse(BeerProvider.CONTENT_URI.toString() + "?limit=1");
-		Cursor c = managedQuery(beerUri, BeerProvider.ALL_BEER_COLUMNS, BeerProvider.BEERADVOCATE_BEER_ID + " = ?", new String[] {beerId}, null);
+		Cursor c = managedQuery(beerUri, Beers.ALL_COLUMNS, Beers.BEERADVOCATE_BEER_ID + " = ?", new String[] {beerId}, null);
 		if (!c.moveToFirst()) {
 			Log.e(TAG, "No data available in cursor");
 		} else {

@@ -17,6 +17,9 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.beerdroid.provider.BeerProvider;
+import com.beerdroid.provider.Beers;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -196,7 +199,7 @@ public class BeerDroid extends Activity {
 	protected final void showResultDetails(final Beer b) {
 		Log.d(TAG, "showResultDetails for beer: " + b.name);
 		final Intent showDetailIntent = new Intent(this, BeerDetails.class);
-		showDetailIntent.putExtra(BeerProvider.BEERADVOCATE_BEER_ID, b.getBaBeer().toString());
+		showDetailIntent.putExtra(Beers.BEERADVOCATE_BEER_ID, b.getBaBeer().toString());
 		startActivity(showDetailIntent);
 	}
 
@@ -282,15 +285,15 @@ public class BeerDroid extends Activity {
 				Beer b = new Beer(jsonResults.getJSONObject(i), county);
 				resultList.add(b);
 				ContentValues cv = new ContentValues();
-				cv.put(BeerProvider.NAME, b.getName());
-				cv.put(BeerProvider.BREWERY, b.getBreweryName());
-				cv.put(BeerProvider.STYLE, b.getStyle());
-				cv.put(BeerProvider.SYSTEMBOLAGET_PRICE, "0");
-				cv.put(BeerProvider.SYSTEMBOLAGET_SIZE, "0");
-				cv.put(BeerProvider.ABV, b.getAbv());
-				cv.put(BeerProvider.BEERADVOCATE_BEER_ID, b.getBaBeer());
-				cv.put(BeerProvider.BEERADVOCATE_BREWERY_ID, b.getBaBrewery());
-				cv.put(BeerProvider.BEERADVOCATE_RATING, b.getBaBrewery());
+				cv.put(Beers.NAME, b.getName());
+				cv.put(Beers.BREWERY, b.getBreweryName());
+				cv.put(Beers.STYLE, b.getStyle());
+				cv.put(Beers.SYSTEMBOLAGET_PRICE, "0");
+				cv.put(Beers.SYSTEMBOLAGET_SIZE, "0");
+				cv.put(Beers.ABV, b.getAbv());
+				cv.put(Beers.BEERADVOCATE_BEER_ID, b.getBaBeer());
+				cv.put(Beers.BEERADVOCATE_BREWERY_ID, b.getBaBrewery());
+				cv.put(Beers.BEERADVOCATE_RATING, b.getBaBrewery());
 				values[i] = cv;
 			}
 			getContentResolver().bulkInsert(BeerProvider.CONTENT_URI, values);
@@ -376,7 +379,7 @@ public class BeerDroid extends Activity {
 	    } else if (action.equals(Intent.ACTION_VIEW)) {
 	    	Log.d(TAG, "Launching BeerDetails from ACTION_VIEW");
 	    	final Intent showDetailIntent = new Intent(this, BeerDetails.class);
-			showDetailIntent.putExtra(BeerProvider.BEERADVOCATE_BEER_ID, intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+			showDetailIntent.putExtra(Beers.BEERADVOCATE_BEER_ID, intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
 			startActivity(showDetailIntent);
 	    }
 	}
