@@ -1,0 +1,7 @@
+<resources>
+	<style parent="@android:style/Theme" name="DarkTheme">
+		<item name="android:textColorSecondary">#84BEE7</item>
+	</style>
+	<style name="LightTheme" parent="@android:style/Theme.Light">
+	</style>
+</resources>
